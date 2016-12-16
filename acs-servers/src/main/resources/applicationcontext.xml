@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${config.properties}</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="serverInitializer" class="com.cmiot.acs.netty.ServerInitializer" init-method="init">
+        <property name="readTimeout" value="${app.channel.readTimeout}"/>
+        <property name="handlerDispatcher" ref="handlerDispatcher"/>
+    </bean>
+
+    <bean id="handlerDispatcher" class="com.cmiot.acs.dispatcher.HandlerDispatcher">
+        <property name="messageExecutor">
+            <bean class="com.cmiot.acs.domain.FixedThreadPoolExecutor" destroy-method="shutdown">
+                <constructor-arg value="${app.handler.pool.corePoolSize}"/>
+                <constructor-arg value="${app.handler.pool.maximumPoolSize}"/>
+                <constructor-arg value="${app.handler.pool.keepAliveSecond}"/>
+                <constructor-arg value="${app.handler.pool.name}"/>
+            </bean>
+        </property>
+        <property name="sleepTimeMS" value="${app.handler.sleepTimeMS}"/>
+        <property name="sleepTimeNS" value="${app.handler.sleepTimeNS}"/>
+    </bean>
+
+
+    <!-- redis连接池 -->
+    <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.pool.maxTotal}"/>
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
+    </bean>
+
+
+    <!-- redis连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="jedisConfig"></property>
+        <property name="hostName" value="${redis.host}"></property>
+        <property name="port" value="${redis.port}"></property>
+        <property name="password" value="${redis.password}"></property>
+        <property name="timeout" value="${redis.timeout}"></property>
+    </bean>
+
+    <!-- redis操作模板，这里采用尽量面向对象的模板 -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!--如果不配置Serializer，那么存储的时候只能使用String，如果用对象类型存储，那么会提示错误 can't cast to String！！！-->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+
+
+    <bean class="com.cmiot.acs.integration.AcsRmsIntegration">
+        <property name="setAcsInterfaceService" ref="acsInterfaceService"/>
+        <property name="setSystemParameterConfigService" ref="systemParameterConfigService"/>
+    </bean>
+
+    <bean class="com.cmiot.acs.integration.BoxRmsIntegration">
+        <property name="setSetBoxInterfaceService" ref="boxInterfaceService"/>
+    </bean>
+
+</beans>

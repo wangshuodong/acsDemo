@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayQueueMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayQueue" >
+    <id column="gateway_queue_id" property="gatewayQueueId" jdbcType="VARCHAR" />
+    <result column="gateway_uuid" property="gatewayUuid" jdbcType="VARCHAR" />
+    <result column="syn_statu" property="synStatu" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    gateway_queue_id, gateway_uuid, syn_statu
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.GatewayQueueExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_gateway_queue
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    limit 0,5000
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_gateway_queue
+    where gateway_queue_id = #{gatewayQueueId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_gateway_queue
+    where gateway_queue_id = #{gatewayQueueId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cmiot.rms.dao.model.GatewayQueueExample" >
+    delete from t_gateway_queue
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.GatewayQueue" >
+    insert into t_gateway_queue (gateway_queue_id, gateway_uuid, syn_statu
+      )
+    values (#{gatewayQueueId,jdbcType=VARCHAR}, #{gatewayUuid,jdbcType=VARCHAR}, #{synStatu,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.GatewayQueue" >
+    insert into t_gateway_queue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gatewayQueueId != null" >
+        gateway_queue_id,
+      </if>
+      <if test="gatewayUuid != null" >
+        gateway_uuid,
+      </if>
+      <if test="synStatu != null" >
+        syn_statu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gatewayQueueId != null" >
+        #{gatewayQueueId,jdbcType=VARCHAR},
+      </if>
+      <if test="gatewayUuid != null" >
+        #{gatewayUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="synStatu != null" >
+        #{synStatu,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cmiot.rms.dao.model.GatewayQueueExample" resultType="java.lang.Integer" >
+    select count(*) from t_gateway_queue
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_gateway_queue
+    <set >
+      <if test="record.gatewayQueueId != null" >
+        gateway_queue_id = #{record.gatewayQueueId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gatewayUuid != null" >
+        gateway_uuid = #{record.gatewayUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.synStatu != null" >
+        syn_statu = #{record.synStatu,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_gateway_queue
+    set gateway_queue_id = #{record.gatewayQueueId,jdbcType=VARCHAR},
+      gateway_uuid = #{record.gatewayUuid,jdbcType=VARCHAR},
+      syn_statu = #{record.synStatu,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.GatewayQueue" >
+    update t_gateway_queue
+    <set >
+      <if test="gatewayUuid != null" >
+        gateway_uuid = #{gatewayUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="synStatu != null" >
+        syn_statu = #{synStatu,jdbcType=INTEGER},
+      </if>
+    </set>
+    where gateway_queue_id = #{gatewayQueueId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.GatewayQueue" >
+    update t_gateway_queue
+    set gateway_uuid = #{gatewayUuid,jdbcType=VARCHAR},
+      syn_statu = #{synStatu,jdbcType=INTEGER}
+    where gateway_queue_id = #{gatewayQueueId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="batchUpdateGatewayQueue" parameterType="java.util.List" >
+    update t_gateway_queue
+    set syn_statu = 1
+    where gateway_queue_id in
+    <foreach  collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item.gatewayQueueId,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  
+
+  <insert id="batchInsertGatewayQueue" parameterType="java.util.List" >
+    insert into t_gateway_queue (gateway_queue_id, gateway_uuid,syn_statu)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.gatewayQueueId,jdbcType=VARCHAR}, #{item.gatewayUuid,jdbcType=INTEGER},
+      #{item.synStatu,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+
+</mapper>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.ManufacturerMapper">
+	<resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.Manufacturer">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="manufacturer_name" property="manufacturerName" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="make_id" property="makeId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, manufacturer_name, code, make_id
+	</sql>
+
+	<select id="queryManufactureByName" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		select
+		<include refid="Base_Column_List" />
+		from t_manufacturer_info where manufacturer_name = #{manufacturerName,jdbcType=VARCHAR} or lower(code) = lower(#{code,jdbcType=VARCHAR})
+	</select>
+
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from t_manufacturer_info where 1=1
+		<if test="id != null and id !='' ">
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="manufacturerName != null and manufacturerName !='' ">
+			and manufacturer_name like CONCAT('%',#{manufacturerName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="code != null and code !='' ">
+			and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="makeId != null and makeId !='' ">
+			and make_id = #{makeId,jdbcType=VARCHAR}
+		</if>
+		order by code asc limit #{lbound,jdbcType=INTEGER},#{mbound,jdbcType=INTEGER}
+	</select>
+
+	<select id="countSelectPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_manufacturer_info where 1=1
+		<if test="id != null and id !='' ">
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="manufacturerName != null and manufacturerName !='' ">
+			and manufacturer_name like CONCAT('%',#{manufacturerName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="code != null and code !='' ">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="makeId != null and makeId !='' ">
+			and make_id = #{makeId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="querySelective" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		select
+		<include refid="Base_Column_List" />
+		from t_manufacturer_info where 1=1
+		<if test="id != null and id !='' ">
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="manufacturerName != null and manufacturerName !='' ">
+			and manufacturer_name like CONCAT('%',#{manufacturerName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="code != null and code !='' ">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="makeId != null and makeId !='' ">
+			and make_id = #{makeId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="countQuerySelective" parameterType="com.cmiot.rms.dao.model.Manufacturer" resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_manufacturer_info where 1=1
+		<if test="id != null and id !='' ">
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="manufacturerName != null and manufacturerName !='' ">
+			and manufacturer_name like CONCAT('%',#{manufacturerName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="code != null and code !='' ">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="makeId != null and makeId !='' ">
+			and make_id = #{makeId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_manufacturer_info
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="queryAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_manufacturer_info
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_manufacturer_info
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		insert into t_manufacturer_info (id, manufacturer_name, code, make_id)
+		values (#{id,jdbcType=VARCHAR}, #{manufacturerName,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR}, #{makeId,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		insert into t_manufacturer_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="manufacturerName != null">
+				manufacturer_name,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="makeId != null">
+				make_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="manufacturerName != null">
+				#{manufacturerName,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="makeId != null">
+				#{makeId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		update t_manufacturer_info
+		<set>
+			<if test="manufacturerName != null">
+				manufacturer_name = #{manufacturerName,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="makeId != null">
+				make_id = #{makeId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.Manufacturer">
+		update t_manufacturer_info
+		set manufacturer_name = #{manufacturerName,jdbcType=VARCHAR},code = #{code,jdbcType=VARCHAR},make_id =
+		#{makeId,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

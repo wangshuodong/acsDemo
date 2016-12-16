@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.BoxWorkOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.BoxWorkOrder" >
+   <!-- box_business -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="box_uuid" property="boxUuid" jdbcType="VARCHAR" />
+    <result column="business_code_boss" property="businessCodeBoss" jdbcType="VARCHAR" />
+    <result column="business_code" property="businessCode" jdbcType="VARCHAR" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+    <result column="parameter_list" property="parameterList" jdbcType="VARCHAR" />
+    <result column="business_statu" property="businessStatu" jdbcType="VARCHAR" />
+    <result column="areacode" property="areacode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="box_mac" property="boxMac" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="fail_count" property="failCount" jdbcType="INTEGER" />
+    <result column="provCode" property="provcode" jdbcType="VARCHAR" />
+    <result column="userId_boss" property="useridBoss" jdbcType="VARCHAR" />
+    <result column="orderTime_boss" property="ordertimeBoss" jdbcType="TIMESTAMP" />
+    <result column="deviceType" property="devicetype" jdbcType="VARCHAR" />
+
+    <result column="userName_boss" property="usernameBoss" jdbcType="VARCHAR" />
+    <result column="userAddress_boss" property="useraddressBoss" jdbcType="VARCHAR" />
+    <result column="contactPerson_boss" property="contactpersonBoss" jdbcType="VARCHAR" />
+    <result column="contactManner_boss" property="contactmannerBoss" jdbcType="VARCHAR" />
+    <result column="ipoeId" property="ipoeid" jdbcType="VARCHAR" />
+    <result column="ipoePassword" property="ipoepassword" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="userIdPassword" property="useridpassword" jdbcType="VARCHAR" />
+    
+    <!-- box_info -->
+    <result column="BOX_NAME" jdbcType="VARCHAR" property="boxName" />
+    <result column="BOX_SERIALNUMBER" jdbcType="VARCHAR" property="boxSerialnumber" />
+    <result column="BOX_MACADDRESS" jdbcType="VARCHAR" property="boxMacaddress" />
+    <result column="GATEWAY_UUID" jdbcType="VARCHAR" property="gatewayUuid" />
+    <result column="BOX_TYPE" jdbcType="VARCHAR" property="boxType" />
+    <result column="BOX_MODEL" jdbcType="VARCHAR" property="boxModel" />
+    <result column="BOX_FACTORY_CODE" jdbcType="VARCHAR" property="boxFactoryCode" />
+    <result column="BOX_ONLINE" jdbcType="INTEGER" property="boxOnline" />
+    <result column="BOX_FIRMWARE_UUID" jdbcType="VARCHAR" property="boxFirmwareUuid" />
+    <result column="BOX_HARDWARE_VERSION" jdbcType="VARCHAR" property="boxHardwareVersion" />
+    <result column="BOX_AREA_ID" jdbcType="VARCHAR" property="boxAreaId" />
+    <result column="BOX_MEMO" jdbcType="VARCHAR" property="boxMemo" />
+    <result column="BOX_IPADDRESS" jdbcType="VARCHAR" property="boxIpaddress" />
+    <result column="BOX_URL" jdbcType="VARCHAR" property="boxUrl" />
+    <result column="BOX_CONNECTIONREQUESTURL" jdbcType="VARCHAR" property="boxConnectionrequesturl" />
+    <result column="BOX_CONN_TYPE" jdbcType="VARCHAR" property="boxConnType" />
+    <result column="BOX_DIGEST_ACCOUNT" jdbcType="VARCHAR" property="boxDigestAccount" />
+    <result column="BOX_DIGEST_PASSWORD" jdbcType="VARCHAR" property="boxDigestPassword" />
+    <result column="BOX_FAMILY_ACCOUNT" jdbcType="VARCHAR" property="boxFamilyAccount" />
+    <result column="BOX_FAMILY_PASSWORD" jdbcType="VARCHAR" property="boxFamilyPassword" />
+    <result column="BOX_FILE_URL" jdbcType="VARCHAR" property="boxFileUrl" />
+    <result column="BOX_JOIN_TIME" jdbcType="INTEGER" property="boxJoinTime" />
+    <result column="BOX_LAST_CONN_TIME" jdbcType="INTEGER" property="boxLastConnTime" />
+    <result column="BOX_STATUS" jdbcType="VARCHAR" property="boxStatus" />
+    <result column="box_connect_account" jdbcType="VARCHAR" property="boxConnectAccount" />
+    <result column="box_connect_password" jdbcType="VARCHAR" property="boxConnectPassword" />
+  </resultMap>
+  
+    <sql id="Base_Column_List" >
+    t.id, t.box_uuid, t.business_code_boss, t.business_code, t.business_name, t.parameter_list, t.business_statu, t.
+    areacode, t.create_time, t.business_type, t.box_mac, t.order_no, t.update_time, t.fail_count, t.
+    provCode, t.userId_boss, t.orderTime_boss, t.deviceType,  t.userName_boss, t.userAddress_boss, t.
+    contactPerson_boss, t.contactManner_boss, t.ipoeId, t.ipoePassword, t.userId, t.userIdPassword
+  </sql>
+  
+  <sql id="Extends_Column_List">
+    b.BOX_NAME, b.BOX_SERIALNUMBER, b.BOX_MACADDRESS, b.GATEWAY_UUID, b.BOX_TYPE, b.BOX_MODEL, b.
+    BOX_FACTORY_CODE, b.BOX_ONLINE, b.BOX_FIRMWARE_UUID, b.BOX_HARDWARE_VERSION, b.BOX_AREA_ID, b.
+    BOX_MEMO, b.BOX_IPADDRESS, b.BOX_URL, b.BOX_CONNECTIONREQUESTURL, b.BOX_CONN_TYPE, b.BOX_DIGEST_ACCOUNT, b.
+    BOX_DIGEST_PASSWORD, b.BOX_FAMILY_ACCOUNT, b.BOX_FAMILY_PASSWORD, b.BOX_FILE_URL, b.BOX_JOIN_TIME, b.
+    BOX_LAST_CONN_TIME,b.BOX_STATUS,b.box_connect_account,b.box_connect_password
+  </sql>
+  
+  <select id="queryList4Page"
+		parameterType="com.cmiot.rms.dao.model.BoxWorkOrder"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />,<include refid="Extends_Column_List" />
+		from t_box_business t left join t_box_info b on t.box_uuid = b.box_uuid where 1=1
+		<if test="boxMacaddress != null">
+			and b.box_macaddress = #{boxMacaddress,jdbcType=VARCHAR } 
+		</if> 
+		<if test="boxSerialnumber != null">
+			and b.box_serialnumber = #{boxSerialnumber,jdbcType=VARCHAR }
+		</if>
+		<if test="orderNo != null">
+			and t.order_no = #{orderNo,jdbcType=VARCHAR } 
+		</if>
+		<if test="businessStatu != null">
+			and t.business_statu = #{businessStatu,jdbcType=VARCHAR }
+		</if>
+		order by t.create_time desc
+		
+	</select>
+	
+	<delete id="deleteBoxWorkOrder" parameterType="java.lang.String">
+		delete from t_box_business where order_no = #{order_no,jdbcType=VARCHAR }
+	</delete>
+	
+	<update id="updateBoxWorkOrder" parameterType="com.cmiot.rms.dao.model.BoxWorkOrder">
+		update t_box_business t 
+	<set>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCodeBoss != null" >
+        business_code_boss = #{businessCodeBoss,jdbcType=VARCHAR},
+        business_code= #{businessCodeBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="areacode != null" >
+        areacode = #{areacode,jdbcType=VARCHAR},
+      </if>
+		</set>
+		where t.order_no = #{orderNo,jdbcType=VARCHAR }
+	</update>
+</mapper>

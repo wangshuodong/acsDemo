@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.SystemParameterInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="parameter_name" property="parameterName" jdbcType="VARCHAR" />
+    <result column="parameter_value" property="parameterValue" jdbcType="VARCHAR" />
+    <result column="parameter_default_value" property="parameterDefaultValue" jdbcType="VARCHAR" />
+    <result column="parameter_type" property="parameterType" jdbcType="INTEGER" />
+    <result column="parameter_description" property="parameterDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, parameter_name, parameter_value, parameter_default_value, parameter_type, parameter_description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_system_parameter
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_system_parameter
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    insert into t_system_parameter (id, parameter_name, parameter_value, 
+      parameter_default_value, parameter_type, parameter_description
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parameterName,jdbcType=VARCHAR}, #{parameterValue,jdbcType=VARCHAR}, 
+      #{parameterDefaultValue,jdbcType=VARCHAR}, #{parameterType,jdbcType=INTEGER}, #{parameterDescription,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    insert into t_system_parameter
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parameterName != null" >
+        parameter_name,
+      </if>
+      <if test="parameterValue != null" >
+        parameter_value,
+      </if>
+      <if test="parameterDefaultValue != null" >
+        parameter_default_value,
+      </if>
+      <if test="parameterType != null" >
+        parameter_type,
+      </if>
+      <if test="parameterDescription != null" >
+        parameter_description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterName != null" >
+        #{parameterName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterValue != null" >
+        #{parameterValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterDefaultValue != null" >
+        #{parameterDefaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterType != null" >
+        #{parameterType,jdbcType=INTEGER},
+      </if>
+      <if test="parameterDescription != null" >
+        #{parameterDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    update t_system_parameter
+    <set >
+      <if test="parameterName != null" >
+        parameter_name = #{parameterName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterValue != null" >
+        parameter_value = #{parameterValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterDefaultValue != null" >
+        parameter_default_value = #{parameterDefaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterType != null" >
+        parameter_type = #{parameterType,jdbcType=INTEGER},
+      </if>
+      <if test="parameterDescription != null" >
+        parameter_description = #{parameterDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    update t_system_parameter
+    set parameter_name = #{parameterName,jdbcType=VARCHAR},
+      parameter_value = #{parameterValue,jdbcType=VARCHAR},
+      parameter_default_value = #{parameterDefaultValue,jdbcType=VARCHAR},
+      parameter_type = #{parameterType,jdbcType=INTEGER},
+      parameter_description = #{parameterDescription,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByName" parameterType="com.cmiot.rms.dao.model.SystemParameterInfo" >
+    update t_system_parameter
+    <set >
+      <if test="parameterValue != null" >
+        parameter_value = #{parameterValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterDefaultValue != null" >
+        parameter_default_value = #{parameterDefaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterType != null" >
+        parameter_type = #{parameterType,jdbcType=INTEGER},
+      </if>
+      <if test="parameterDescription != null" >
+        parameter_description = #{parameterDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where parameter_name = #{parameterName,jdbcType=VARCHAR}
+  </update>
+  <select id="searchByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_system_parameter
+    where parameter_name = #{parameterName,jdbcType=VARCHAR}
+  </select>
+</mapper>

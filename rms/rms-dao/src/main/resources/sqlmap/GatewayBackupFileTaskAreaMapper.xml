@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayBackupFileTaskAreaMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayBackupFileTaskArea" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, task_id, area_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_gateway_backup_file_task_area
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_gateway_backup_file_task_area
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.GatewayBackupFileTaskArea" >
+    insert into t_gateway_backup_file_task_area (id, task_id, area_id
+      )
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.GatewayBackupFileTaskArea" >
+    insert into t_gateway_backup_file_task_area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.GatewayBackupFileTaskArea" >
+    update t_gateway_backup_file_task_area
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.GatewayBackupFileTaskArea" >
+    update t_gateway_backup_file_task_area
+    set task_id = #{taskId,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into t_gateway_backup_file_task_area (id, task_id, area_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.id}, #{item.taskId}, #{item.areaId})
+    </foreach>
+  </insert>
+
+  <delete id="deleteByTaskId" parameterType="java.lang.String" >
+    delete from t_gateway_backup_file_task_area
+    where task_id = #{taskId,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="selectAreasById" resultType="java.util.HashMap" parameterType="java.lang.String" >
+    select area_id areaId
+    from t_gateway_backup_file_task_area
+    where task_id = #{taskId,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

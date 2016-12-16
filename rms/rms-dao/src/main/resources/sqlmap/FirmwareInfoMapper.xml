@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmiot.rms.dao.mapper.FirmwareInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.FirmwareInfo" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="firmware_name" property="firmwareName" jdbcType="VARCHAR" />
+        <result column="firmware_version" property="firmwareVersion" jdbcType="VARCHAR" />
+        <result column="firmware_path" property="firmwarePath" jdbcType="VARCHAR" />
+        <result column="firmware_size" property="firmwareSize" jdbcType="DOUBLE" />
+        <result column="firmware_create_time" property="firmwareCreateTime" jdbcType="INTEGER" />
+        <result column="firmware_description" property="firmwareDescription" jdbcType="VARCHAR" />
+        <result column="device_model" property="deviceModel" jdbcType="CHAR" />
+        <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+        <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+        <result column="upload_md5" property="uploadMd5" jdbcType="VARCHAR" />
+        <result column="input_md5" property="inputMd5" jdbcType="VARCHAR" />
+        <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id, firmware_name, firmware_version, firmware_path, firmware_size, firmware_create_time,
+    firmware_description, device_model, device_id, check_status, upload_md5, input_md5, area_id
+  </sql>
+
+	<update id="updateFirmwareCheckStatus" parameterType="java.lang.String">
+		update t_firmware_info set check_status= 2 where id = #{id,jdbcType=CHAR}
+	</update>
+
+	<select id="queryList4Page" parameterType="com.cmiot.rms.dao.model.FirmwareInfo"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_firmware_info
+
+		where 1=1
+		<if test="firmwareVersion != null">
+			and firmware_version =
+			#{firmwareVersion,jdbcType=CHAR}
+		</if>
+		<if test="deviceModel != null">d
+			and device_model =
+            #{deviceModel,jdbcType=CHAR}
+		</if>
+		<if test="deviceId != null">
+			and device_id =
+			#{deviceId,jdbcType=CHAR}
+		</if>
+		ORDER BY firmware_create_time DESC
+	</select>
+
+	<select id="queryList" parameterType="com.cmiot.rms.dao.model.FirmwareInfo"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_firmware_info
+		where 1=1
+		<if test="firmwareVersion != null">
+			and firmware_version =
+			#{firmwareVersion,jdbcType=CHAR}
+		</if>
+		<if test="deviceModel != null">
+			and device_model =
+            #{deviceModel,jdbcType=CHAR}
+		</if>
+		<if test="deviceId != null">
+			and device_id =
+			#{deviceId,jdbcType=CHAR}
+		</if>
+
+		<if test="id != null">
+			and id =
+			#{id,jdbcType=CHAR}
+		</if>
+		<if test="checkStatus != null ">
+			and check_status = #{checkStatus,jdbcType=INTEGER}
+		</if>
+		order by firmware_create_time desc
+	</select>
+
+	<select id="queryListByDeviceIds" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_firmware_info
+		where id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_firmware_info
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_firmware_info
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.cmiot.rms.dao.model.FirmwareInfo" >
+        insert into t_firmware_info (id, firmware_name, firmware_version,
+        firmware_path, firmware_size, firmware_create_time,
+        firmware_description, device_model, device_id, check_status, upload_md5, input_md5, area_id)
+        values (#{id,jdbcType=VARCHAR}, #{firmwareName,jdbcType=VARCHAR}, #{firmwareVersion,jdbcType=VARCHAR},
+        #{firmwarePath,jdbcType=VARCHAR}, #{firmwareSize,jdbcType=DOUBLE}, #{firmwareCreateTime,jdbcType=INTEGER},
+        #{firmwareDescription,jdbcType=VARCHAR}, #{deviceModel,jdbcType=CHAR}, #{deviceId,jdbcType=VARCHAR}, 
+        #{checkStatus,jdbcType=INTEGER}, #{uploadMd5,jdbcType=VARCHAR}, #{inputMd5,jdbcType=VARCHAR}, #{areaId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.FirmwareInfo" >
+        insert into t_firmware_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="firmwareName != null" >
+                firmware_name,
+            </if>
+            <if test="firmwareVersion != null" >
+                firmware_version,
+            </if>
+            <if test="firmwarePath != null" >
+                firmware_path,
+            </if>
+            <if test="firmwareSize != null" >
+                firmware_size,
+            </if>
+            <if test="firmwareCreateTime != null" >
+                firmware_create_time,
+            </if>
+            <if test="firmwareDescription != null" >
+                firmware_description,
+            </if>
+            <if test="deviceModel != null" >
+                device_model,
+            </if>
+            <if test="deviceId != null" >
+                device_id,
+            </if>
+			<if test="checkStatus != null">
+				check_status,
+			</if>
+			<if test="uploadMd5 != null">
+				upload_md5,
+			</if>
+			<if test="inputMd5 != null">
+				input_md5,
+			</if>
+			<if test="areaId != null">
+				area_id,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwareName != null" >
+                #{firmwareName,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwareVersion != null" >
+                #{firmwareVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwarePath != null" >
+                #{firmwarePath,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwareSize != null" >
+                #{firmwareSize,jdbcType=DOUBLE},
+            </if>
+            <if test="firmwareCreateTime != null" >
+                #{firmwareCreateTime,jdbcType=INTEGER},
+            </if>
+            <if test="firmwareDescription != null" >
+                #{firmwareDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceModel != null" >
+                #{deviceModel,jdbcType=CHAR},
+            </if>
+            <if test="deviceId != null" >
+                #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkStatus != null">
+				#{checkStatus,jdbcType=INTEGER},
+			</if>
+			<if test="uploadMd5 != null">
+				#{uploadMd5,jdbcType=VARCHAR},
+			</if>
+			<if test="inputMd5 != null">
+				#{inputMd5,jdbcType=VARCHAR},
+			</if>
+			<if test="areaId != null">
+				#{areaId,jdbcType=VARCHAR},
+			</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.FirmwareInfo" >
+        update t_firmware_info
+        <set >
+            <if test="firmwareName != null" >
+                firmware_name = #{firmwareName,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwareVersion != null" >
+                firmware_version = #{firmwareVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwarePath != null" >
+                firmware_path = #{firmwarePath,jdbcType=VARCHAR},
+            </if>
+            <if test="firmwareSize != null" >
+                firmware_size = #{firmwareSize,jdbcType=DOUBLE},
+            </if>
+            <if test="firmwareCreateTime != null" >
+                firmware_create_time = #{firmwareCreateTime,jdbcType=INTEGER},
+            </if>
+            <if test="firmwareDescription != null" >
+                firmware_description = #{firmwareDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceModel != null" >
+                device_model = #{deviceModel,jdbcType=CHAR},
+            </if>
+            <if test="deviceId != null" >
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+             <if test="checkStatus != null">
+				check_status = #{checkStatus,jdbcType=INTEGER},
+			</if>
+			<if test="uploadMd5 != null">
+				upload_md5 = #{uploadMd5,jdbcType=VARCHAR},
+			</if>
+			<if test="inputMd5 != null">
+				input_md5 = #{inputMd5,jdbcType=VARCHAR},
+			</if>
+			<if test="areaId != null">
+				area_id = #{areaId,jdbcType=VARCHAR},
+			</if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.FirmwareInfo" >
+    update t_firmware_info
+    set firmware_name = #{firmwareName,jdbcType=VARCHAR},
+      firmware_version = #{firmwareVersion,jdbcType=VARCHAR},
+      firmware_path = #{firmwarePath,jdbcType=VARCHAR},
+      firmware_size = #{firmwareSize,jdbcType=DOUBLE},
+      firmware_create_time = #{firmwareCreateTime,jdbcType=INTEGER},
+      firmware_description = #{firmwareDescription,jdbcType=VARCHAR},
+      device_model = #{deviceModel,jdbcType=CHAR},
+      device_id = #{deviceId,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=INTEGER},
+      upload_md5 = #{uploadMd5,jdbcType=VARCHAR},
+      input_md5 = #{inputMd5,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据设备uuid查询需要升级的固件 -->
+  <select id="selectByDeviceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+	  select
+	  <include refid="Base_Column_List" />
+	  from t_firmware_info where device_id=#{deviceId,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="selectSelective" parameterType="com.cmiot.rms.dao.model.FirmwareInfo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_firmware_info
+    where
+      firmware_version = #{firmwareVersion} and device_id  = #{deviceId}
+  </select>
+
+    <select id="selectCount"  parameterType="map" resultType="int" >
+        SELECT count(*) FROM t_firmware_info
+        where firmware_version = #{firmwareVersion,jdbcType=VARCHAR}  AND  device_id = #{deviceId,jdbcType=VARCHAR}
+        <if test="id != null">
+            and id !=
+            #{id,jdbcType=CHAR}
+        </if>
+    </select>
+
+
+    <select id="selectPreparedFirmware" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_firmware_info t
+        where
+           t.id IN (SELECT p.firmware_previous_id
+          FROM
+           t_firmware_prepared p
+          WHERE
+           p.firmware_id =  #{id,jdbcType=VARCHAR} and p.need_force_upgrade=1)
+        ORDER BY firmware_create_time DESC
+    </select>
+
+    <select id="queryFirmwareIdList" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        select t.id firmwareId, t.firmware_version firmwareVersion, d.device_model deviceModel, d.device_factory deviceFactory
+        from t_firmware_info t, t_device_info d
+        where t.device_id = d.id
+        and t.firmware_version = #{firmwareVersion,jdbcType=VARCHAR}
+        and d.device_model = #{deviceModel,jdbcType=VARCHAR}
+        and d.device_factory = #{deviceFactory,jdbcType=VARCHAR}
+    </select>
+
+    <select id="searchCountByFirmwareId" parameterType="java.lang.String" resultType="int" >
+        SELECT count(1) FROM t_gateway_info
+        WHERE  gateway_firmware_uuid = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryFirmwareIdListForImport" resultType="java.util.Map">
+        select t.id firmwareId, t.firmware_version firmwareVersion, d.device_model deviceModel, d.device_factory deviceFactory
+        from t_firmware_info t, t_device_info d
+        where t.device_id = d.id
+    </select>
+
+</mapper>

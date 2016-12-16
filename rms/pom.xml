@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.iot</groupId>
+        <artifactId>iot-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.cmiot.rms</groupId>
+    <artifactId>rms</artifactId>
+    <version>1.2.0</version>
+    <name>rms Projects</name>
+    <url>http://maven.apache.org</url>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.cmiot.rms</groupId>
+                <artifactId>rms-facade</artifactId>
+                <version>1.3.6</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>nexus-releases</id>
+                    <name>Internal Release Repository</name>
+                    <url>http://183.230.40.66:8081/content/repositories/releases/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>online</id>
+            <distributionManagement>
+                <repository>
+                    <id>nexus-releases</id>
+                    <name>Internal Release Repository</name>
+                    <url>http://183.230.40.66:8081/content/repositories/releases/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <modules>
+        <module>rms-common</module>
+        <module>rms-api</module>
+        <module>rms-dao</module>
+        <module>rms-services</module>
+        <module>rms-facade</module>
+    </modules>
+
+</project>

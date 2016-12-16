@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<busi:Template xmlns:busi="http://www.iot.cn/BusiTemplate"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.iot.cn/BusiTemplate BusiTemplate.xsd ">
+
+	<!-- 业务操作流程 D.2. 上行路由连接PPPoE模式建立流程-->
+	<OperationFlow operationReturn="InternetGatewayDevice.X_CMCC_UserInfo.Result">
+		<FlowBean id="PPPoE_Routed">
+			<!-- 1.添加实例 -->
+			<!-- <FlowBeanAdd id="WANDevice">
+				<Command>InternetGatewayDevice.WANDevice.</Command>
+			</FlowBeanAdd>
+			
+			<FlowBeanAdd id="WANConnectionDevice" ref="WANDevice">
+				<Command>WANConnectionDevice.</Command>
+			</FlowBeanAdd>
+			
+			2.添加实例
+			<FlowBeanAdd id="WANPPPConnection" ref="WANConnectionDevice">
+				<Command>WANPPPConnection.</Command>
+			</FlowBeanAdd> -->
+			<!--查询节点值实例-->
+			<FlowBeanSearch id="INTERNETWAN">
+				<!--查询根节点-->
+				<Command>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.</Command>
+				<FlowBeanMatch id ="X_CMCC_ServiceList">
+					<!--匹配正则表达式-->
+					<Pattern>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.[0-9]+.WANPPPConnection.[0-9]+.X_CMCC_ServiceList</Pattern>
+					<!--匹配的值-->
+					<MatchValue>INTERNET</MatchValue>
+					<leaf>X_CMCC_ServiceList</leaf>
+				</FlowBeanMatch>
+				<!--节点截取的依据串-->
+				<SplitPath>X_CMCC_ServiceList</SplitPath><!-- 需要截取的路径所在的MatchBean的id-->
+				<SplitStr>X_CMCC_ServiceList</SplitStr>
+
+			</FlowBeanSearch>
+
+			<!-- 1.添加实例 -->
+			<!--如果refSearch查询到节点了，则本FlowBeanAdd不执行-->
+			<FlowBeanAdd id="WANConnectionDevice" refSearch="INTERNETWAN" searchFirst="0">
+				<Command>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.</Command>
+			</FlowBeanAdd>
+			<!-- 2.添加实例 -->
+			<FlowBeanAdd id="WANPPPConnection" ref="WANConnectionDevice" refSearch="INTERNETWAN" >
+				<Command>WANPPPConnection.</Command>
+			</FlowBeanAdd>
+
+			<!-- 3.设置参数 -->
+			<!--如果refSearch查询到节点了，则设置参数的路径取refSearch获取到的路径-->
+			<FlowBeanSet ref="WANPPPConnection" refSearch="INTERNETWAN">
+				<SetParam>
+					<!--2表示重写VLAN-->
+					<Command>X_CMCC_VLANMode</Command>
+					<Default>2</Default>
+				</SetParam>
+				<SetParam>
+					<!--某个省的VLANID应该是固定的，41是安徽的-->
+					<Command>X_CMCC_VLANIDMark</Command>
+					<Default>41</Default>
+				</SetParam>
+				<SetParam>
+					<Command>ConnectionType</Command>
+					<Default>PPPoE_Routed</Default>
+				</SetParam>
+				<SetParam>
+					<Command>Username</Command>
+					<ParamKey>Username</ParamKey>
+				</SetParam>
+				<SetParam>
+					<Command>Password</Command>
+					<ParamKey>Password</ParamKey>
+				</SetParam>
+				<!--<SetParam>
+					<Command>X_CMCC_LanInterface</Command>
+					<ParamKey>X_CMCC_LanInterface</ParamKey>
+				</SetParam>-->
+				<!--表示INTERNET的WAN连接-->
+				<SetParam>
+					<Command>X_CMCC_ServiceList</Command>
+					<Default>INTERNET</Default>
+				</SetParam>
+				<SetParam>
+					<Command>Enable</Command>
+					<Default>true</Default>
+				</SetParam>
+			</FlowBeanSet>
+		</FlowBean>
+	</OperationFlow>
+</busi:Template>

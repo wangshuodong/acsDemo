@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 日志组件启动时，打印调试信息，并监控此文件变化，周期300秒 -->
+<configuration scan="true" scanPeriod="300 seconds" debug="false">
+    <!--针对jul的性能优化 -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- 配置文件，包括此文件内的所有变量的配置 -->
+    <property name="LOG_PATH" value="${user.dir}/logs"/>
+    <property name="APP_NAME" value="rms"/>
+    <!-- contextName主要是为了区分在一个web容器下部署多个应用启用jmx时，不会出现混乱 -->
+    <contextName>${APP_NAME}</contextName>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{0}:%L- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ***************************************************************** -->
+    <!-- info级别的日志appender -->
+    <!-- ***************************************************************** -->
+    <appender name="app-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}-info-30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}-info-30dt.log.%d{yyyy-MM-dd}.%i
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1024MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{0}:%L- %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- ***************************************************************** -->
+    <!-- error级别日志appender -->
+    <!-- ***************************************************************** -->
+    <appender name="app-err" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}-error-30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}-error-30dt.%d{yyyy-MM-dd}.%i
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1024MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{0}:%L- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--日志异步到数据库-->
+    <appender name="db-classic-mysql-pool" class="ch.qos.logback.classic.db.DBAppender">
+        <!--日志异步到数据库 -->
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <!--连接池 -->
+            <driverClass>com.mysql.jdbc.Driver</driverClass>
+            <url>jdbc:mysql://172.19.10.11:3306/rms?useUnicode=true&amp;characterEncoding=UTF8&amp;zeroDateTimeBehavior=convertToNull</url>
+            <user>root</user>
+            <password>Iot-IG123</password>
+        </connectionSource>
+    </appender>
+
+    <!--写入数据库日志记录-->
+    <logger name="com.cmiot.rms.common.logback" level="INFO" additivity="false">
+        <appender-ref ref="db-classic-mysql-pool"/>
+    </logger>
+
+    <!-- 根日志logger -->
+    <root level="TRACE">
+        <appender-ref ref="app-err"/>
+        <appender-ref ref="app-info"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="db-classic-mysql-pool"/>
+    </root>
+
+</configuration>

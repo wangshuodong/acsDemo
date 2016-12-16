@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayParamMapper">
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayParam">
+    <id column="parm_id" jdbcType="INTEGER" property="parmId" />
+    <result column="parm_name" jdbcType="VARCHAR" property="parmName" />
+    <result column="parm_type" jdbcType="VARCHAR" property="parmType" />
+    <result column="parm_length" jdbcType="INTEGER" property="parmLength" />
+    <result column="parm_writeable" jdbcType="VARCHAR" property="parmWriteable" />
+    <result column="parm_value" jdbcType="VARCHAR" property="parmValue" />
+    <result column="parm_factory" jdbcType="VARCHAR" property="parmFactory" />
+    
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+     parm_id,parm_name,parm_type,parm_length,parm_writeable,parm_value,parm_factory 
+  </sql>
+  
+  <!-- 根据id查询数据 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_meta_parameter
+    where parm_id = #{parmId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有的数据 -->
+  <select id="selectObject" parameterType="com.cmiot.rms.dao.model.GatewayParam"
+  	resultMap="BaseResultMap">
+    select a.parm_id,a.parm_name,a.parm_type,a.parm_length,a.parm_writeable,a.parm_factory 
+    from t_meta_parameter a
+  </select>
+  
+  <!-- 根据id删除数据 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_meta_parameter
+    where parm_id = #{parmId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加网关属性 -->
+  <insert id="insertObject" parameterType="com.cmiot.rms.dao.model.GatewayParam">
+  		INSERT INTO t_meta_parameter(
+  				parm_name,parm_type, 
+  				parm_length,parm_writeable
+  			)
+		VALUES(
+				#{parmName,jdbcType=INTEGER}, #{parmType,jdbcType=INTEGER},
+				#{parmLength,jdbcType=INTEGER},#{parmWriteable}
+			)
+  </insert>
+
+</mapper>

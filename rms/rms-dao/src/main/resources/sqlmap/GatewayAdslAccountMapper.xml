@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayAdslAccountMapper">
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayAdslAccount">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="gateway_mac" jdbcType="CHAR" property="gatewayMAC" />
+    <result column="adsl_account" jdbcType="CHAR" property="adslAccount" />
+    <result column="create_time" jdbcType="INTEGER" property="createTime" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+
+  </resultMap>
+
+	
+	<select id="queryCount" parameterType="java.util.Map" resultType="long">
+		select count(*) from t_gateway_adsl_account
+	</select>
+	
+   <select id="queryGatewayInfoList" parameterType="com.cmiot.rms.dao.model.GatewayInfo" resultMap="BaseResultMap">
+    select  ID, gateway_mac, adsl_account, create_time, area_id from t_gateway_adsl_account order by create_time 
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select  ID, gateway_mac, adsl_account, create_time, area_id  from t_gateway_adsl_account where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+    insert into t_gateway_adsl_account (ID, gateway_mac, adsl_account, create_time, area_id)
+    values (
+    	#{id,jdbcType=VARCHAR}, #{gatewayMAC,jdbcType=CHAR}, #{adslAccount,jdbcType=CHAR}, #{createTime,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER}
+      )
+  </insert>
+  
+</mapper>

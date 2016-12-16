@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayGroup" >
+    <result column="group_uuid" property="groupUuid" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="gateway_uuid" property="gatewayUuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    group_uuid, group_name, gateway_uuid
+  </sql>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    select   
+    <include refid="Base_Column_List" />
+    from t_gateway_group
+    where 1=1
+    <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR}
+    </if>
+    <if test="gatewayUuid != null" >
+      group_uuid = #{gatewayUuid,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <delete id="deleteByExample" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    delete from t_gateway_group
+ 	where group_uuid = #{groupUuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    insert into t_gateway_group (group_uuid, group_name, gateway_uuid
+      )
+    values (#{groupUuid,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{gatewayUuid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    insert into t_gateway_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupUuid != null" >
+        group_uuid,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="gatewayUuid != null" >
+        gateway_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupUuid != null" >
+        #{groupUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="gatewayUuid != null" >
+        #{gatewayUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cmiot.rms.dao.model.GatewayGroupExample" resultType="java.lang.Integer" >
+    select count(*) from t_gateway_group
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    update t_gateway_group
+    <set >
+      <if test="gatewayUuid != null" >
+        gateway_uuid = #{gatewayUuid,jdbcType=VARCHAR}
+      </if>
+      where group_uuid = #{groupUuid,jdbcType=VARCHAR}
+    </set>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_gateway_group
+    set group_uuid = #{record.groupUuid,jdbcType=VARCHAR},
+      group_name = #{record.groupName,jdbcType=VARCHAR},
+      gateway_uuid = #{record.gatewayUuid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.GatewayGroup" >
+    select
+    <include refid="Base_Column_List" />
+    from t_gateway_group
+    where 1 = 1
+    <if test="groupUuid != null" >
+    and group_uuid = #{groupUuid,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="groupName != null" >
+    and group_name = #{groupName,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.LogAutoBakMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.LogAutoBak" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="interval_date" property="intervalDate" jdbcType="INTEGER" />
+    <result column="last_work_time" property="lastWorkTime" jdbcType="BIGINT" />
+    <result column="effective" property="effective" jdbcType="BIT" />
+    <result column="save_path" property="savePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, interval_date, last_work_time, effective, save_path
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.LogAutoBakExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_log_auto_bak
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_log_auto_bak
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_log_auto_bak
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cmiot.rms.dao.model.LogAutoBakExample" >
+    delete from t_log_auto_bak
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.LogAutoBak" >
+    insert into t_log_auto_bak (id, interval_date, last_work_time,
+    effective, save_path)
+    values (#{id,jdbcType=CHAR}, #{intervalDate,jdbcType=INTEGER}, #{lastWorkTime,jdbcType=BIGINT},
+    #{effective,jdbcType=BIT}, #{savePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.LogAutoBak" >
+    insert into t_log_auto_bak
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="intervalDate != null" >
+        interval_date,
+      </if>
+      <if test="lastWorkTime != null" >
+        last_work_time,
+      </if>
+      <if test="effective != null" >
+        effective,
+      </if>
+      <if test="savePath != null" >
+        save_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="intervalDate != null" >
+        #{intervalDate,jdbcType=INTEGER},
+      </if>
+      <if test="lastWorkTime != null" >
+        #{lastWorkTime,jdbcType=BIGINT},
+      </if>
+      <if test="effective != null" >
+        #{effective,jdbcType=BIT},
+      </if>
+      <if test="savePath != null" >
+        #{savePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cmiot.rms.dao.model.LogAutoBakExample" resultType="java.lang.Integer" >
+    select count(*) from t_log_auto_bak
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_log_auto_bak
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.intervalDate != null" >
+        interval_date = #{record.intervalDate,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastWorkTime != null" >
+        last_work_time = #{record.lastWorkTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.effective != null" >
+        effective = #{record.effective,jdbcType=BIT},
+      </if>
+      <if test="record.savePath != null" >
+        save_path = #{record.savePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_log_auto_bak
+    set id = #{record.id,jdbcType=CHAR},
+    interval_date = #{record.intervalDate,jdbcType=INTEGER},
+    last_work_time = #{record.lastWorkTime,jdbcType=BIGINT},
+    effective = #{record.effective,jdbcType=BIT},
+    save_path = #{record.savePath,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.LogAutoBak" >
+    update t_log_auto_bak
+    <set >
+      <if test="intervalDate != null" >
+        interval_date = #{intervalDate,jdbcType=INTEGER},
+      </if>
+      <if test="lastWorkTime != null" >
+        last_work_time = #{lastWorkTime,jdbcType=BIGINT},
+      </if>
+      <if test="effective != null" >
+        effective = #{effective,jdbcType=BIT},
+      </if>
+      <if test="savePath != null" >
+        save_path = #{savePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.LogAutoBak" >
+    update t_log_auto_bak
+    set interval_date = #{intervalDate,jdbcType=INTEGER},
+      last_work_time = #{lastWorkTime,jdbcType=BIGINT},
+      effective = #{effective,jdbcType=BIT},
+      save_path = #{savePath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

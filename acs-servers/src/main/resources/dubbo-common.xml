@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://code.alibabatech.com/schema/dubbo
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系，不要与消费方一样 -->
+    <dubbo:application name="acs-service" owner="acs"/>
+    <!-- 使用zookeeper注册中心暴露服务地址 -->
+    <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
+    <!-- 用dubbo协议在20880端口暴露服务 ，注意不能与其他服务端口相同  -->
+    <!-- dispatcher all所有请求都发到线程池处理，threadpool fixed固定线程池大小，初始化后不进行伸缩，threads 线程池内线程个数 -->
+    <dubbo:protocol name="dubbo" port="${dubbo.port}" dispatcher="all" threadpool="fixed" threads="512"/>
+    <!--服务提供者缺省值配置-->
+    <dubbo:provider retries="0"/>
+    <!--服务消费者缺省值配置-->
+    <dubbo:consumer retries="0" timeout="15000" check="false"/>
+
+</beans>

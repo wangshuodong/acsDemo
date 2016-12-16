@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<busi:Template xmlns:busi="http://www.iot.cn/BusiTemplate"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.iot.cn/BusiTemplate BusiTemplate.xsd ">
+
+	<!-- 业务操作流程  D.5. VoIP业务开通流程-->
+	<OperationFlow operationReturn="InternetGatewayDevice.X_CMCC_UserInfo.Result">
+
+		<FlowBean id="PPPoE_Routed">
+			<!--查询节点值实例-->
+			<FlowBeanSearch id="VOIPWAN">
+				<!--查询根节点-->
+				<Command>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.</Command>
+				<FlowBeanMatch id ="X_CMCC_ServiceList">
+					<!--匹配正则表达式-->
+					<Pattern>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.[0-9]+.WANIPConnection.[0-9]+.X_CMCC_ServiceList</Pattern>
+					<!--匹配的值-->
+					<MatchValue>VOIP</MatchValue>
+					<leaf>X_CMCC_ServiceList</leaf>
+				</FlowBeanMatch>
+				<!--节点截取的依据串-->
+				<SplitPath>X_CMCC_ServiceList</SplitPath><!-- 需要截取的路径所在的MatchBean的id-->
+				<SplitStr>X_CMCC_ServiceList</SplitStr>
+
+			</FlowBeanSearch>
+
+
+			<!-- 1.添加实例 -->
+			<FlowBeanAdd id="WANConnectionDevice" refSearch="VOIPWAN" searchFirst="0">
+				<Command>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.</Command>
+			</FlowBeanAdd>
+			<!-- 2.添加实例 -->
+			<FlowBeanAdd id="WANIPConnection" ref="WANConnectionDevice" refSearch="VOIPWAN" >
+				<Command>WANIPConnection.</Command>
+			</FlowBeanAdd>
+
+			<!-- 3.设置参数 -->
+			<FlowBeanSet ref="WANIPConnection" refSearch="VOIPWAN">
+				<SetParam>
+					<!--2表示重写VLAN-->
+					<Command>X_CMCC_VLANMode</Command>
+					<Default>2</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<!--某个省的VLANID应该是固定的，47是安徽的-->
+					<Command>X_CMCC_VLANIDMark</Command>
+					<Default>47</Default>
+					<valueType>int</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>ConnectionType</Command>
+					<Default>IP_Routed</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>AddressingType</Command>
+					<Default>DHCP</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>X_CMCC_802-1pMark</Command>
+					<Default>5</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<!--<SetParam>
+					<Command>X_CMCC_LanInterface</Command>
+					<ParamKey>X_CMCC_LanInterface</ParamKey>
+				</SetParam>-->
+				<!--表示VOIP的WAN连接-->
+				<SetParam>
+					<Command>X_CMCC_ServiceList</Command>
+					<Default>VOIP</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>Enable</Command>
+					<Default>true</Default>
+					<valueType>boolean</valueType>
+				</SetParam>
+			</FlowBeanSet>
+		</FlowBean>
+
+		<!-- 子流程 -->
+		<FlowBean>
+			<!-- 1.添加实例 -->
+			<FlowBeanAdd id="VoiceService" searchFirst="0" >
+				<Command>InternetGatewayDevice.Services.VoiceService.</Command>
+			</FlowBeanAdd>
+
+			<FlowBeanAdd id="VoiceProfile" ref="VoiceService" searchFirst="0">
+				<Command>VoiceProfile.</Command>
+			</FlowBeanAdd>
+
+			<!-- 3.设置参数 -->
+			<FlowBeanSet ref="VoiceProfile">
+				<SetParam>
+					<Command>X_CMCC_ServerType</Command>
+					<Default>0</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.ProxyServer</Command>
+					<Default>211.138.185.97</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.ProxyServerPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-ProxyServer</Command>
+					<Default>211.138.185.97</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-ProxyServerPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.RegistrarServer</Command>
+					<Default>ims.ah.chinamobile.com</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.RegistrarServerPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-RegistrarServer</Command>
+					<Default>211.138.185.97</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-RegistrarServerPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.OutboundProxy</Command>
+					<Default>211.138.185.97</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.OutboundProxyPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-OutboundProxy</Command>
+					<Default>211.138.185.97</Default>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.X_CMCC_Standby-OutboundProxyPort</Command>
+					<Default>5060</Default>
+					<valueType>string</valueType>
+				</SetParam>
+			</FlowBeanSet>
+		</FlowBean>
+
+		<FlowBean>
+			<!-- 1.添加实例 -->
+			<FlowBeanAdd id="Line" ref="VoiceProfile" searchFirst="0">
+				<Command>Line.</Command>
+			</FlowBeanAdd>
+
+			<!-- 3.设置参数 -->
+			<FlowBeanSet ref="Line">
+				<SetParam>
+					<Command>SIP.AuthUserName</Command>
+					<ParamKey>SIP.AuthUserName</ParamKey>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>SIP.AuthPassword</Command>
+					<ParamKey>SIP.AuthPassword</ParamKey>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<!--用户标识，通常为用户电话号码-->
+					<Command>SIP.URI</Command>
+					<ParamKey>SIP.AuthUserName</ParamKey>
+
+					<!--stitch表示字符串拼接，表示在ParamKey值后面拼接上stitch的值,stitch和split同时出现时，先执行stitch-->
+					<!--<stitch>@ims.ah.chinamobile.com</stitch>-->
+					<!--split表示拆分，根据split的值对ParamKey值进行拆分-->
+					<split>@</split>
+					<!--beforeOrAfter表示Command取split的前面(before)的串还是后面(after)的串,和split要成对出现，如果没有beforeOrAfter,默认为before。-->
+					<beforeOrAfter>before</beforeOrAfter>
+					<valueType>string</valueType>
+				</SetParam>
+				<SetParam>
+					<Command>Enable</Command>
+					<Default>Enabled</Default>
+					<valueType>string</valueType>
+				</SetParam>
+			</FlowBeanSet>
+		</FlowBean>
+	</OperationFlow>
+</busi:Template>

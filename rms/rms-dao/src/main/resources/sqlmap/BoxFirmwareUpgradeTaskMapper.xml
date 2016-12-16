@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.BoxFirmwareUpgradeTaskMapper">
+	<resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.BoxFirmwareUpgradeTask">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+		<result column="task_start_time" property="taskStartTime" jdbcType="VARCHAR" />
+		<result column="task_end_time" property="taskEndTime" jdbcType="VARCHAR" />
+		<result column="task_create_time" property="taskCreateTime" jdbcType="INTEGER" />
+		<result column="task_status" property="taskStatus" jdbcType="INTEGER" />
+		<result column="factory_code" property="factoryCode" jdbcType="VARCHAR" />
+		<result column="area_id" property="areaId" jdbcType="VARCHAR" />
+		<result column="current_firmware_uuid" property="currentFirmwareUuid" jdbcType="VARCHAR" />
+		<result column="target_firmware_id" property="targetFirmwareId" jdbcType="VARCHAR" />
+		<result column="task_trigger_mode" property="taskTriggerMode" jdbcType="INTEGER" />
+		<result column="task_trigger_event" property="taskTriggerEvent" jdbcType="INTEGER" />
+		<result column="task_description" property="taskDescription" jdbcType="VARCHAR" />
+		<result column="task_period" property="taskPeriod" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, task_name, task_start_time, task_end_time, task_create_time, task_status, factory_code,
+		area_id, current_firmware_uuid,
+		target_firmware_id, task_trigger_mode, task_trigger_event,
+		task_description, task_period
+	</sql>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_box_factory_info where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.cmiot.rms.dao.model.BoxFirmwareUpgradeTask">
+		INSERT INTO t_box_firmware_upgrade_task(
+		id,
+		task_name,
+		task_start_time,
+		task_end_time,
+		task_create_time,
+		task_status,
+		factory_code,
+		area_id,
+		current_firmware_uuid,
+		target_firmware_id,
+		task_trigger_mode,
+		task_trigger_event,
+		task_description,
+		task_period
+		)
+		VALUES(
+		#{id,jdbcType=VARCHAR},
+		#{taskName,jdbcType=VARCHAR},
+		#{taskStartTime,jdbcType=VARCHAR},
+		#{taskEndTime,jdbcType=VARCHAR},
+		#{taskCreateTime,jdbcType=VARCHAR},
+		#{taskStatus,jdbcType=VARCHAR},
+		#{factoryCode,jdbcType=VARCHAR},
+		#{areaId,jdbcType=VARCHAR},
+		#{currentFirmwareUuid,jdbcType=VARCHAR},
+		#{targetFirmwareId,jdbcType=VARCHAR},
+		#{taskTriggerMode,jdbcType=INTEGER},
+		#{taskTriggerEvent,jdbcType=INTEGER},
+		#{taskDescription,jdbcType=VARCHAR},
+		#{taskPeriod,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_box_firmware_upgrade_task
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateUpgradeTaskStatus" parameterType="java.util.HashMap">
+		update t_box_firmware_upgrade_task
+		set task_status = #{taskStatus,jdbcType=INTEGER}
+		where id
+		= #{taskId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryUpgradeSpecifiedVersionInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		a.box_uuid boxId,
+		b.firmware_id firmwareId,
+		c.firmware_version firmwareVersion
+		FROM
+		t_box_info a,
+		t_box_firmware_prepared b,
+		t_box_firmware_info c
+		WHERE
+		a.box_firmware_uuid = b.firmware_previous_id
+		AND b.firmware_id = c.id
+		AND a.box_uuid = #{boxId,jdbcType=VARCHAR}
+		order by
+		c.firmware_create_time desc
+	</select>
+
+	<select id="selectBoxFirmwareInfoByBoxIds" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		c.box_uuid boxUuid,
+		c.box_macaddress boxMacAddress,
+		e.factory_name factoryName,
+		d.box_model boxModel,
+		b.firmware_version firmwareVersion,
+		c.box_area_id areaId
+		FROM
+		t_box_firmware_prepared a,
+		t_box_firmware_info b,
+		t_box_info c,
+		t_box_device_info d,
+		t_box_factory_info e
+		WHERE
+		a.firmware_id = b.id
+		AND a.firmware_previous_id = c.box_firmware_uuid
+		AND b.device_id = d.id
+		AND d.factory_code =
+		e.factory_code
+		<if test="firmwareId !=null and firmwareId != ''">
+			AND a.firmware_id = #{firmwareId,jdbcType=VARCHAR}
+		</if>
+		AND c.box_uuid IN
+		<foreach collection="boxIds" index="index" item="item" open="(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		<if test="areaId != null and areaId != '(0)' and areaId != ''">
+			AND (c.box_area_id in ${areaId} OR c.box_area_id = '' OR c.box_area_id IS NULL)
+		</if>
+		<if test="firmwarePreviousId != null and firmwarePreviousId != ''">
+			AND c.box_firmware_uuid = #{firmwarePreviousId,jdbcType=VARCHAR}
+		</if>
+		ORDER BY c.box_join_time DESC limit #{lbound,jdbcType=INTEGER},#{mbound,jdbcType=INTEGER}
+		<!-- SELECT -->
+		<!-- a.box_uuid boxUuid, -->
+		<!-- a.box_macaddress boxMacAddress, -->
+		<!-- b.factory_name factoryName, -->
+		<!-- a.box_model boxModel, -->
+		<!-- c.firmware_version firmwareVersion, -->
+		<!-- a.box_area_id areaId -->
+		<!-- FROM -->
+		<!-- t_box_info a, -->
+		<!-- t_box_factory_info b, -->
+		<!-- t_box_firmware_info c -->
+		<!-- WHERE -->
+		<!-- a.box_factory_code = b.factory_code -->
+		<!-- AND a.box_firmware_uuid = -->
+		<!-- c.id -->
+		<!-- AND a.box_uuid IN -->
+		<!-- <foreach collection="boxIds" index="index" item="item" open="(" separator="," close=")"> -->
+		<!-- #{item,jdbcType=VARCHAR} -->
+		<!-- </foreach> -->
+		<!-- <if test="areaId != null and areaId != '(0)' and areaId != ''"> -->
+		<!-- AND (a.box_area_id in ${areaId} OR a.box_area_id = '' OR a.box_area_id IS NULL) -->
+		<!-- </if> -->
+		<!-- order by a.box_join_time desc limit #{lbound,jdbcType=INTEGER},#{mbound,jdbcType=INTEGER} -->
+	</select>
+
+	<select id="countSelectBoxFirmwareInfoByBoxIds" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		t_box_firmware_prepared a,
+		t_box_firmware_info b,
+		t_box_info c,
+		t_box_device_info d,
+		t_box_factory_info e
+		WHERE
+		a.firmware_id = b.id
+		AND a.firmware_previous_id = c.box_firmware_uuid
+		AND
+		b.device_id = d.id
+		AND d.factory_code = e.factory_code
+		<if test="firmwareId !=null and firmwareId != ''">
+			AND a.firmware_id = #{firmwareId,jdbcType=VARCHAR}
+		</if>
+		AND c.box_uuid IN
+		<foreach collection="boxIds" index="index" item="item" open="(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		<if test="areaId != null and areaId != '(0)' and areaId != ''">
+			AND (c.box_area_id in ${areaId} OR c.box_area_id = '' OR c.box_area_id IS NULL)
+		</if>
+		<if test="firmwarePreviousId != null and firmwarePreviousId != ''">
+			AND c.box_firmware_uuid = #{firmwarePreviousId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectBoxFirmwareInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		c.box_uuid boxUuid,
+		c.box_macaddress boxMacAddress,
+		e.factory_name factoryName,
+		d.box_model boxModel,
+		b.firmware_version firmwareVersion,
+		c.box_area_id areaId
+		FROM
+		t_box_firmware_prepared a,
+		t_box_firmware_info b,
+		t_box_info c,
+		t_box_device_info d,
+		t_box_factory_info e
+		WHERE
+		a.firmware_id = b.id
+		AND a.firmware_previous_id = c.box_firmware_uuid
+		AND b.device_id = d.id
+		AND d.factory_code =e.factory_code
+		<if test="firmwareId !=null and firmwareId != ''">
+			AND a.firmware_id = #{firmwareId,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId != '(0)' and areaId != ''">
+			AND (c.box_area_id in ${areaId} OR c.box_area_id = '' OR c.box_area_id IS NULL)
+		</if>
+		<if test="firmwarePreviousId != null and firmwarePreviousId != ''">
+			AND c.box_firmware_uuid = #{firmwarePreviousId,jdbcType=VARCHAR}
+		</if>
+		ORDER BY c.box_join_time DESC limit #{lbound,jdbcType=INTEGER},#{mbound,jdbcType=INTEGER}
+	</select>
+
+	<select id="countSelectBoxFirmwareInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		t_box_firmware_prepared a,
+		t_box_firmware_info b,
+		t_box_info c,
+		t_box_device_info d,
+		t_box_factory_info e
+		WHERE
+		a.firmware_id = b.id
+		AND a.firmware_previous_id = c.box_firmware_uuid
+		AND b.device_id = d.id
+		AND d.factory_code = e.factory_code
+		<if test="firmwareId !=null and firmwareId != ''">
+			AND a.firmware_id = #{firmwareId,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId != '(0)' and areaId != ''">
+			AND (c.box_area_id in ${areaId} OR c.box_area_id = '' OR c.box_area_id IS NULL)
+		</if>
+		<if test="firmwarePreviousId != null and firmwarePreviousId != ''">
+			AND c.box_firmware_uuid = #{firmwarePreviousId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectAllOrByTaskName" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		a.id id,
+		a.task_name taskName,
+		b.firmware_version firmwareVersion,
+		a.area_id areaId,
+		a.task_trigger_mode taskTriggerMode,
+		a.task_trigger_event taskTriggerEvent,
+		a.task_status taskStatus,
+		a.task_create_time taskCreateTime
+		FROM
+		t_box_firmware_upgrade_task a,
+		t_box_firmware_info b
+		WHERE
+		a.current_firmware_uuid = b.id
+		<if test="taskName != null and taskName != ''">
+			AND a.task_name like CONCAT('%',#{taskName,jdbcType=VARCHAR},'%')
+		</if>
+		Order by a.task_create_time desc limit #{lbound,jdbcType=INTEGER},#{mbound,jdbcType=INTEGER}
+	</select>
+
+	<select id="countSelectAllOrByTaskName" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		t_box_firmware_upgrade_task a,
+		t_box_firmware_info b
+		WHERE
+		a.current_firmware_uuid = b.id
+		<if test="taskName != null and taskName != ''">
+			AND a.task_name like CONCAT('%',#{taskName,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+
+	<insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.BoxFirmwareUpgradeTask">
+		insert into t_box_firmware_upgrade_task
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="taskName != null">
+				task_name,
+			</if>
+			<if test="taskStartTime != null">
+				task_start_time,
+			</if>
+			<if test="taskEndTime != null">
+				task_end_time,
+			</if>
+			<if test="taskCreateTime != null">
+				task_create_time,
+			</if>
+			<if test="taskStatus != null">
+				task_status,
+			</if>
+			<if test="factoryCode != null">
+				factory_code,
+			</if>
+			<if test="areaId != null">
+				area_id,
+			</if>
+			<if test="currentFirmwareUuid != null">
+				current_firmware_uuid,
+			</if>
+			<if test="targetFirmwareId != null">
+				target_firmware_id,
+			</if>
+			<if test="taskTriggerMode != null">
+				task_trigger_mode,
+			</if>
+			<if test="taskTriggerEvent != null">
+				task_trigger_event,
+			</if>
+			<if test="taskDescription != null">
+				task_description,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="taskName != null">
+				#{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="taskStartTime != null">
+				#{taskStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="taskEndTime != null">
+				#{taskEndTime,jdbcType=VARCHAR},
+			</if>
+			<if test="taskCreateTime != null">
+				#{taskCreateTime,jdbcType=INTEGER},
+			</if>
+			<if test="taskStatus != null">
+				#{taskStatus,jdbcType=INTEGER},
+			</if>
+			<if test="factoryCode != null">
+				#{factoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaId != null">
+				#{areaId,jdbcType=VARCHAR},
+			</if>
+			<if test="currentFirmwareUuid != null">
+				#{currentFirmwareUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="targetFirmwareId != null">
+				#{targetFirmwareId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskTriggerMode != null">
+				#{taskTriggerMode,jdbcType=INTEGER},
+			</if>
+			<if test="taskTriggerEvent != null">
+				#{taskTriggerEvent,jdbcType=INTEGER},
+			</if>
+			<if test="taskDescription != null">
+				#{taskDescription,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateBoxFirmwareUuidByPrimaryKey" parameterType="java.util.Map">
+		UPDATE t_box_info a
+		SET a.box_firmware_uuid = #{boxFirmwareUuid,jdbcType=VARCHAR}
+		WHERE
+		a.box_uuid = #{boxUuid,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.BoxFirmwareUpgradeTask">
+		update t_box_firmware_upgrade_task
+		<set>
+			<if test="taskName != null">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="taskStartTime != null">
+				task_start_time = #{taskStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="taskEndTime != null">
+				task_end_time = #{taskEndTime,jdbcType=VARCHAR},
+			</if>
+			<if test="taskCreateTime != null">
+				task_create_time = #{taskCreateTime,jdbcType=INTEGER},
+			</if>
+			<if test="taskStatus != null">
+				task_status = #{taskStatus,jdbcType=INTEGER},
+			</if>
+			<if test="factoryCode != null">
+				factory_code = #{factoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaId != null">
+				area_id = #{areaId,jdbcType=VARCHAR},
+			</if>
+			<if test="currentFirmwareUuid != null">
+				current_firmware_uuid = #{currentFirmwareUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="targetFirmwareId != null">
+				target_firmware_id = #{targetFirmwareId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskTriggerMode != null">
+				task_trigger_mode = #{taskTriggerMode,jdbcType=INTEGER},
+			</if>
+			<if test="taskTriggerEvent != null">
+				task_trigger_event = #{taskTriggerEvent,jdbcType=INTEGER},
+			</if>
+			<if test="taskDescription != null">
+				task_description = #{taskDescription,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryListByStatus" parameterType="int" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_box_firmware_upgrade_task
+		where  task_status = #{status,jdbcType=INTEGER}
+	</select>
+</mapper>

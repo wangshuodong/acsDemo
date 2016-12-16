@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="upgradeTask" class="com.cmiot.rms.services.UpgradeTask" />
+	<bean id="workOrderTask" class="com.cmiot.rms.services.WorkOrderTask" />
+
+	<bean id="backupTask" class="com.cmiot.rms.services.BackupTask" />
+	<bean id="flowrateTask" class="com.cmiot.rms.services.FlowrateTask" />
+
+	<bean id="logAutoBackupTask" class="com.cmiot.rms.services.LogBackupTask" />
+
+	<bean id="databasebackupTask" class="com.cmiot.rms.services.DatabaseBackupTask" />
+	
+	<bean id="syncGatewayToBmsTask" class="com.cmiot.rms.services.SyncGatewayToBmsTask"/>
+
+	<bean id ="boxUpgradeTask" class="com.cmiot.rms.services.BoxUpgradeTask"/>
+
+	<bean id="syncDataToFTPServerTask" class="com.cmiot.rms.services.SynchronizationFullResourceDataTask"/>
+
+	<!-- Spring Quartz Job Detail Method -->
+	<bean id="upgradeNotifyJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="upgradeTask" />
+		<property name="targetMethod" value="process" />
+	</bean>
+	<bean id="upgradeStatusUpdateJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="upgradeTask" />
+		<property name="targetMethod" value="updateTaskStatus" />
+	</bean>
+	<bean id="workOrderTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="workOrderTask" />
+		<property name="targetMethod" value="work" />
+	</bean>
+
+	<bean id="backupNotifyJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="backupTask" />
+		<property name="targetMethod" value="process" />
+	</bean>
+	<bean id="backupStatusUpdateJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="backupTask" />
+		<property name="targetMethod" value="updateTaskStatus" />
+	</bean>
+	<bean id="flowrateTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="flowrateTask" />
+		<property name="targetMethod" value="process" />
+	</bean>
+
+	<bean id="logAutoBackupTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="logAutoBackupTask" />
+		<property name="targetMethod" value="work" />
+	</bean>
+
+	<bean id="databasebackupTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="databasebackupTask" />
+		<property name="targetMethod" value="backupDatabase" />
+	</bean>
+	
+	<bean id="syncGatewayToBmsTaskJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="syncGatewayToBmsTask"/>
+        <property name="targetMethod" value="synGatewayToBms"/>
+    </bean>
+
+	<bean id="syncDataToFTPServerTaskJob"
+		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="syncDataToFTPServerTask"/>
+		<property name="targetMethod" value="synchronizationData"/>
+	</bean>
+
+	<!-- Simple Trigger, run every 5 seconds -->
+	<bean id="upgradeTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+
+		<property name="jobDetail" ref="upgradeNotifyJob" />
+		<property name="repeatInterval" value="30000" />
+		<property name="startDelay" value="1000" />
+
+	</bean>
+
+	<bean id="backupTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="backupNotifyJob" />
+		<property name="repeatInterval" value="60000" />
+		<property name="startDelay" value="3000" />
+	</bean>
+	<bean id="backupStatusUpdateTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="backupStatusUpdateJob" />
+		<property name="repeatInterval" value="30000" />
+		<property name="startDelay" value="5000" />
+	</bean>
+	<bean id="flowrateTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="flowrateTaskJob" />
+		<property name="repeatInterval" value="60000" />
+		<property name="startDelay" value="3000" />
+	</bean>
+
+	<!--workOrderTrigger run every 5 seconds -->
+	<bean id="workOrderTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="workOrderTaskJob" />
+		<property name="cronExpression" value="0/30 * * * * ?" />
+		<property name="startDelay" value="1000" />
+	</bean>
+
+	<bean id="upgradeStatusUpdateTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+
+		<property name="jobDetail" ref="upgradeStatusUpdateJob" />
+		<property name="repeatInterval" value="30000" />
+		<property name="startDelay" value="1000" />
+
+	</bean>
+
+	<bean id="logAutoBackupTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="logAutoBackupTaskJob" />
+		<property name="cronExpression" value="0/30 * * * * ?" />
+		<property name="startDelay" value="3000" />
+	</bean>
+
+	<bean id="databaseBackupTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="databasebackupTaskJob" />
+		<property name="repeatInterval" value="60000" />
+		<property name="startDelay" value="10000" />
+	</bean>
+	
+	<bean id="syncGatewayToBmsTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="syncGatewayToBmsTaskJob"/>
+        <property name="cronExpression" value="0 0/1 * * * ?"/>
+        <property name="startDelay" value="3000"/>
+    </bean>
+
+	<bean id="boxUpgradeStatusUpdateJob"
+		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="boxUpgradeTask" />
+		<property name="targetMethod" value="updateTaskStatus" />
+	</bean>
+	<bean id="boxUpgradeStatusUpdateTrigger"
+		  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="boxUpgradeStatusUpdateJob" />
+		<property name="repeatInterval" value="30000" />
+		<property name="startDelay" value="1000" />
+
+	</bean>
+
+	<bean id="syncDataToFTPServerTrigger"
+		  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="syncDataToFTPServerTaskJob"/>
+		<property name="cronExpression" value="0 0 1 * * ?"/>
+		<property name="startDelay" value="3000"/>
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="upgradeTrigger" />
+				<ref bean="upgradeStatusUpdateTrigger" />
+				<ref bean="boxUpgradeStatusUpdateTrigger" />
+				<ref bean="backupTrigger" />
+				<ref bean="backupStatusUpdateTrigger" />
+				<ref bean="workOrderTrigger" />
+				<ref bean="logAutoBackupTrigger" />
+				<ref bean="flowrateTrigger" />
+				<ref bean="databaseBackupTrigger" />
+				<ref bean="syncGatewayToBmsTrigger"/>
+				<ref bean="syncDataToFTPServerTrigger"/>
+			</list>
+		</property>
+	</bean>
+
+</beans>
+

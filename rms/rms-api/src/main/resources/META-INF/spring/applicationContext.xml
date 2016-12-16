@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-lazy-init="true">
+
+    <description>dao config</description>
+    <context:component-scan base-package="com.cmiot.rms.services"/>
+
+	 <!-- 设定事务管理 -->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--启动spring注解功能 -->
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <!-- 配置事务特性 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="query*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut expression="execution( * com.cmiot.rms.services.impl.*.*(..))"
+                      id="serviceMethod" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
+    </aop:config>
+
+
+    <!-- 使用注解方式定义事务 -->
+    <tx:annotation-driven transaction-manager="sqlSessionFactory" proxy-target-class="true"/>
+	
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:config/mybatis.cfg.xml"/>
+        <property name="mapperLocations" value="classpath:sqlmap/*.xml"/>
+    </bean>
+
+    <!-- 手动实现DAO,需要得到sqlSession -->
+    <bean id="sqlSessionTemplate"
+          class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.cmiot.rms.dao"/>
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
+    </bean>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${ds.url}"/>
+        <property name="username" value="${ds.username}"/>
+        <property name="password" value="${ds.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxActive" value="50"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="logAbandoned" value="true"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小,mysql 不使用 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+        <!-- 慢查询sql打印 -->
+        <property name="connectionProperties" value="druid.stat.slowSqlMillis=100"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="dataSource" />
+        </property>
+    </bean>
+
+    <bean id="baseDao" class="com.cmiot.rms.dao.impl.BaseDaoImpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+
+    <!-- Redis 配置 -->
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+
+        <property name="maxTotal" value="${redis.maxActive}" />
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.testOnReturn}"/>
+    </bean>
+
+    <!-- ShardedJedisPool连Redis集群 -->
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg name="host" value="${redis.host}" />
+                    <constructor-arg name="port" value="${redis.port}" />
+                    <constructor-arg name="name" value="${redis.name}" />
+                    <constructor-arg name="timeout" value="${redis.timeout}" />
+                    <constructor-arg name="weight" value="1" />
+                    <property name="password" value="${redis.pass:#{null}}"/>
+                </bean>
+
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="1"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>file:${rms.config.path}</value>
+            </list>
+        </property>
+    </bean>
+
+   
+
+    <bean id ="kafkaConsumer" class="com.cmiot.rms.services.message.KafkaConsumer" lazy-init="false">
+        <constructor-arg index="0" value="${kafka.brokers}"/>
+        <constructor-arg index="1" value="#{T(java.util.Arrays).asList('${kafka.topics}')}"/>
+        <constructor-arg index="2" value="${kafka.group}"/>
+    </bean>
+
+    <bean id ="kafkaProducer" class="com.cmiot.rms.services.message.KafkaProducer">
+        <constructor-arg index="0" value="${kafka.brokers}"/>
+        <constructor-arg index="1" value="#{T(java.util.Arrays).asList('${kafka.topics}')}"/>
+    </bean>
+
+    <!--spring工具类-->
+    <bean id="springApplicationContextHolder" class="com.cmiot.rms.services.workorder.SpringApplicationContextHolder"></bean>
+
+    <bean id="notBlankValidator" class="com.cmiot.rms.services.validator.parse.impl.NotBlankValidator"></bean>
+    <bean id="excelRepetitionDataValidator" class="com.cmiot.rms.services.validator.parse.impl.ExcelRepetitionDataValidator"></bean>
+    <bean id="dBRepetitionDataValidator" class="com.cmiot.rms.services.validator.parse.impl.DBRepetitionDataValidator"></bean>
+    <bean id="deviceModelAndOUIValidator" class="com.cmiot.rms.services.validator.parse.impl.CorrectnessValidator"></bean>
+
+    <bean id="validator" class="com.cmiot.rms.services.validator.ValidatorManagement">
+        <property name="validatorList">
+            <list>
+                <ref bean="notBlankValidator"></ref>
+                <ref bean="excelRepetitionDataValidator"></ref>
+                <ref bean="dBRepetitionDataValidator"></ref>
+                <ref bean="deviceModelAndOUIValidator"></ref>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="boxNotBlankValidator" class="com.cmiot.rms.services.boxValidator.parse.impl.BoxNotBlankValidator"></bean>
+    <bean id="boxExcelRepetitionDataValidator" class="com.cmiot.rms.services.boxValidator.parse.impl.BoxExcelRepetitionDataValidator"></bean>
+    <bean id="boxDBRepetitionDataValidator" class="com.cmiot.rms.services.boxValidator.parse.impl.BoxDBRepetitionDataValidator"></bean>
+    <bean id="boxDeviceModelAndOUIValidator" class="com.cmiot.rms.services.boxValidator.parse.impl.BoxCorrectnessValidator"></bean>
+    <bean id="boxValidator" class="com.cmiot.rms.services.boxValidator.BoxValidatorManagement">
+        <property name="boxValidatorList">
+            <list>
+                <ref bean="boxNotBlankValidator"></ref>
+                <ref bean="boxExcelRepetitionDataValidator"></ref>
+                <ref bean="boxDBRepetitionDataValidator"></ref>
+                <ref bean="boxDeviceModelAndOUIValidator"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>

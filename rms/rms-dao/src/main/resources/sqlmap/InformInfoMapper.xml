@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.InformInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.InformInfo" >
+    <id column="INFORM_ID" property="informId" jdbcType="VARCHAR" />
+    <result column="INFORM_STATE" property="informState" jdbcType="INTEGER" />
+    <result column="INFORM_CREATE_TIME" property="informCreateTime" jdbcType="INTEGER" />
+    <result column="INFORM_MODIFY_TIME" property="informModifyTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.cmiot.rms.dao.model.InformInfo" extends="BaseResultMap" >
+    <result column="INFORM_CONTENT" property="informContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    INFORM_ID, INFORM_STATE, INFORM_CREATE_TIME, INFORM_MODIFY_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    INFORM_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_inform_info
+    where INFORM_ID = #{informId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_inform_info
+    where INFORM_ID = #{informId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.InformInfo" >
+    insert into t_inform_info (INFORM_ID, INFORM_STATE, INFORM_CREATE_TIME, 
+      INFORM_MODIFY_TIME, INFORM_CONTENT
+      )
+    values (#{informId,jdbcType=VARCHAR}, #{informState,jdbcType=INTEGER}, #{informCreateTime,jdbcType=INTEGER}, 
+      #{informModifyTime,jdbcType=INTEGER}, #{informContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.InformInfo" >
+    insert into t_inform_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="informId != null" >
+        INFORM_ID,
+      </if>
+      <if test="informState != null" >
+        INFORM_STATE,
+      </if>
+      <if test="informCreateTime != null" >
+        INFORM_CREATE_TIME,
+      </if>
+      <if test="informModifyTime != null" >
+        INFORM_MODIFY_TIME,
+      </if>
+      <if test="informContent != null" >
+        INFORM_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="informId != null" >
+        #{informId,jdbcType=VARCHAR},
+      </if>
+      <if test="informState != null" >
+        #{informState,jdbcType=INTEGER},
+      </if>
+      <if test="informCreateTime != null" >
+        #{informCreateTime,jdbcType=INTEGER},
+      </if>
+      <if test="informModifyTime != null" >
+        #{informModifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="informContent != null" >
+        #{informContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.InformInfo" >
+    update t_inform_info
+    <set >
+      <if test="informState != null" >
+        INFORM_STATE = #{informState,jdbcType=INTEGER},
+      </if>
+      <if test="informCreateTime != null" >
+        INFORM_CREATE_TIME = #{informCreateTime,jdbcType=INTEGER},
+      </if>
+      <if test="informModifyTime != null" >
+        INFORM_MODIFY_TIME = #{informModifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="informContent != null" >
+        INFORM_CONTENT = #{informContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where INFORM_ID = #{informId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cmiot.rms.dao.model.InformInfo" >
+    update t_inform_info
+    set INFORM_STATE = #{informState,jdbcType=INTEGER},
+      INFORM_CREATE_TIME = #{informCreateTime,jdbcType=INTEGER},
+      INFORM_MODIFY_TIME = #{informModifyTime,jdbcType=INTEGER},
+      INFORM_CONTENT = #{informContent,jdbcType=LONGVARCHAR}
+    where INFORM_ID = #{informId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.InformInfo" >
+    update t_inform_info
+    set INFORM_STATE = #{informState,jdbcType=INTEGER},
+      INFORM_CREATE_TIME = #{informCreateTime,jdbcType=INTEGER},
+      INFORM_MODIFY_TIME = #{informModifyTime,jdbcType=INTEGER}
+    where INFORM_ID = #{informId,jdbcType=VARCHAR}
+  </update>
+</mapper>

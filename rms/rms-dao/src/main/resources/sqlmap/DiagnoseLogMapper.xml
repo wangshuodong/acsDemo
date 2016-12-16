@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.DiagnoseLogMapper">
+	<resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.DiagnoseLog">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="gateway_macaddress" property="gatewayMacaddress" jdbcType="VARCHAR" />
+		<result column="diagnose_operator" property="diagnoseOperator" jdbcType="VARCHAR" />
+		<result column="diagnose_type" property="diagnoseType" jdbcType="INTEGER" />
+		<result column="diagnose_time" property="diagnoseTime" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, gateway_macaddress, diagnose_operator, diagnose_type, diagnose_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_diagnose_log
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_diagnose_log
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.cmiot.rms.dao.model.DiagnoseLog">
+		insert into t_diagnose_log (id, gateway_macaddress, diagnose_operator,diagnose_type, diagnose_time)
+		values (#{id,jdbcType=INTEGER}, #{gatewayMacaddress,jdbcType=VARCHAR}, #{diagnoseOperator,jdbcType=VARCHAR},
+		#{diagnoseType,jdbcType=INTEGER}, #{diagnoseTime,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.DiagnoseLog">
+		insert into t_diagnose_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="gatewayMacaddress != null">
+				gateway_macaddress,
+			</if>
+			<if test="diagnoseOperator != null">
+				diagnose_operator,
+			</if>
+			<if test="diagnoseType != null">
+				diagnose_type,
+			</if>
+			<if test="diagnoseTime != null">
+				diagnose_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="gatewayMacaddress != null">
+				#{gatewayMacaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="diagnoseOperator != null">
+				#{diagnoseOperator,jdbcType=VARCHAR},
+			</if>
+			<if test="diagnoseType != null">
+				#{diagnoseType,jdbcType=INTEGER},
+			</if>
+			<if test="diagnoseTime != null">
+				#{diagnoseTime,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.DiagnoseLog">
+		update t_diagnose_log
+		<set>
+			<if test="gatewayMacaddress != null">
+				gateway_macaddress = #{gatewayMacaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="diagnoseOperator != null">
+				diagnose_operator = #{diagnoseOperator,jdbcType=VARCHAR},
+			</if>
+			<if test="diagnoseType != null">
+				diagnose_type = #{diagnoseType,jdbcType=INTEGER},
+			</if>
+			<if test="diagnoseTime != null">
+				diagnose_time = #{diagnoseTime,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.DiagnoseLog">
+		update t_diagnose_log
+		set gateway_macaddress = #{gatewayMacaddress,jdbcType=VARCHAR},
+		diagnose_operator = #{diagnoseOperator,jdbcType=VARCHAR},
+		diagnose_type = #{diagnoseType,jdbcType=INTEGER},
+		diagnose_time = #{diagnoseTime,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

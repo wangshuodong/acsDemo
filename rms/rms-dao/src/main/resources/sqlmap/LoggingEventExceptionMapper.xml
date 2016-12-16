@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.LoggingEventExceptionMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.LoggingEventException" >
+    <id column="event_id" property="eventId" jdbcType="BIGINT" />
+    <id column="i" property="i" jdbcType="SMALLINT" />
+    <result column="trace_line" property="traceLine" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    event_id, i, trace_line
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.LoggingEventExceptionKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from logging_event_exception
+    where event_id = #{eventId,jdbcType=BIGINT}
+      and i = #{i,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.cmiot.rms.dao.model.LoggingEventExceptionKey" >
+    delete from logging_event_exception
+    where event_id = #{eventId,jdbcType=BIGINT}
+      and i = #{i,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.LoggingEventException" >
+    insert into logging_event_exception (event_id, i, trace_line
+      )
+    values (#{eventId,jdbcType=BIGINT}, #{i,jdbcType=SMALLINT}, #{traceLine,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.LoggingEventException" >
+    insert into logging_event_exception
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eventId != null" >
+        event_id,
+      </if>
+      <if test="i != null" >
+        i,
+      </if>
+      <if test="traceLine != null" >
+        trace_line,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eventId != null" >
+        #{eventId,jdbcType=BIGINT},
+      </if>
+      <if test="i != null" >
+        #{i,jdbcType=SMALLINT},
+      </if>
+      <if test="traceLine != null" >
+        #{traceLine,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.LoggingEventException" >
+    update logging_event_exception
+    <set >
+      <if test="traceLine != null" >
+        trace_line = #{traceLine,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where event_id = #{eventId,jdbcType=BIGINT}
+      and i = #{i,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.LoggingEventException" >
+    update logging_event_exception
+    set trace_line = #{traceLine,jdbcType=VARCHAR}
+    where event_id = #{eventId,jdbcType=BIGINT}
+      and i = #{i,jdbcType=SMALLINT}
+  </update>
+</mapper>

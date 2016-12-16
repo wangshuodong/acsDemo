@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.OperationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.OperationLog" >
+    <id column="LOG_ID" property="logId" jdbcType="INTEGER" />
+    <result column="LOG_OPERATION_TYPE" property="logOperationType" jdbcType="INTEGER" />
+    <result column="LOG_MODULE_ID" property="logModuleId" jdbcType="INTEGER" />
+    <result column="LOG_OPERATOR_ID" property="logOperatorId" jdbcType="INTEGER" />
+    <result column="LOG_IP" property="logIp" jdbcType="VARCHAR" />
+    <result column="LOG_URL_PATTERN" property="logUrlPattern" jdbcType="VARCHAR" />
+    <result column="LOG_CONTENT" property="logContent" jdbcType="VARCHAR" />
+    <result column="LOG_BEFORE_CONTENT" property="logBeforeContent" jdbcType="VARCHAR" />
+    <result column="LOG_CREATE_TIME" property="logCreateTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    LOG_ID, LOG_OPERATION_TYPE, LOG_MODULE_ID, LOG_OPERATOR_ID, LOG_IP, LOG_URL_PATTERN, 
+    LOG_CONTENT, LOG_BEFORE_CONTENT, LOG_CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_oper_log
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_oper_log
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.OperationLog" >
+    insert into t_oper_log (LOG_ID, LOG_OPERATION_TYPE, LOG_MODULE_ID, 
+      LOG_OPERATOR_ID, LOG_IP, LOG_URL_PATTERN, 
+      LOG_CONTENT, LOG_BEFORE_CONTENT, LOG_CREATE_TIME
+      )
+    values (#{logId,jdbcType=INTEGER}, #{logOperationType,jdbcType=INTEGER}, #{logModuleId,jdbcType=INTEGER}, 
+      #{logOperatorId,jdbcType=INTEGER}, #{logIp,jdbcType=VARCHAR}, #{logUrlPattern,jdbcType=VARCHAR}, 
+      #{logContent,jdbcType=VARCHAR}, #{logBeforeContent,jdbcType=VARCHAR}, #{logCreateTime,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.OperationLog" >
+    insert into t_oper_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        LOG_ID,
+      </if>
+      <if test="logOperationType != null" >
+        LOG_OPERATION_TYPE,
+      </if>
+      <if test="logModuleId != null" >
+        LOG_MODULE_ID,
+      </if>
+      <if test="logOperatorId != null" >
+        LOG_OPERATOR_ID,
+      </if>
+      <if test="logIp != null" >
+        LOG_IP,
+      </if>
+      <if test="logUrlPattern != null" >
+        LOG_URL_PATTERN,
+      </if>
+      <if test="logContent != null" >
+        LOG_CONTENT,
+      </if>
+      <if test="logBeforeContent != null" >
+        LOG_BEFORE_CONTENT,
+      </if>
+      <if test="logCreateTime != null" >
+        LOG_CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=INTEGER},
+      </if>
+      <if test="logOperationType != null" >
+        #{logOperationType,jdbcType=INTEGER},
+      </if>
+      <if test="logModuleId != null" >
+        #{logModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="logOperatorId != null" >
+        #{logOperatorId,jdbcType=INTEGER},
+      </if>
+      <if test="logIp != null" >
+        #{logIp,jdbcType=VARCHAR},
+      </if>
+      <if test="logUrlPattern != null" >
+        #{logUrlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        #{logContent,jdbcType=VARCHAR},
+      </if>
+      <if test="logBeforeContent != null" >
+        #{logBeforeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="logCreateTime != null" >
+        #{logCreateTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.OperationLog" >
+    update t_oper_log
+    <set >
+      <if test="logOperationType != null" >
+        LOG_OPERATION_TYPE = #{logOperationType,jdbcType=INTEGER},
+      </if>
+      <if test="logModuleId != null" >
+        LOG_MODULE_ID = #{logModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="logOperatorId != null" >
+        LOG_OPERATOR_ID = #{logOperatorId,jdbcType=INTEGER},
+      </if>
+      <if test="logIp != null" >
+        LOG_IP = #{logIp,jdbcType=VARCHAR},
+      </if>
+      <if test="logUrlPattern != null" >
+        LOG_URL_PATTERN = #{logUrlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        LOG_CONTENT = #{logContent,jdbcType=VARCHAR},
+      </if>
+      <if test="logBeforeContent != null" >
+        LOG_BEFORE_CONTENT = #{logBeforeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="logCreateTime != null" >
+        LOG_CREATE_TIME = #{logCreateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.OperationLog" >
+    update t_oper_log
+    set LOG_OPERATION_TYPE = #{logOperationType,jdbcType=INTEGER},
+      LOG_MODULE_ID = #{logModuleId,jdbcType=INTEGER},
+      LOG_OPERATOR_ID = #{logOperatorId,jdbcType=INTEGER},
+      LOG_IP = #{logIp,jdbcType=VARCHAR},
+      LOG_URL_PATTERN = #{logUrlPattern,jdbcType=VARCHAR},
+      LOG_CONTENT = #{logContent,jdbcType=VARCHAR},
+      LOG_BEFORE_CONTENT = #{logBeforeContent,jdbcType=VARCHAR},
+      LOG_CREATE_TIME = #{logCreateTime,jdbcType=INTEGER}
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </update>
+</mapper>

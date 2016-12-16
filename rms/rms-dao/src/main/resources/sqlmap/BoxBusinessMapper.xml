@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.BoxBusinessMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.BoxBusiness" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="box_uuid" property="boxUuid" jdbcType="VARCHAR" />
+    <result column="business_code_boss" property="businessCodeBoss" jdbcType="VARCHAR" />
+    <result column="business_code" property="businessCode" jdbcType="VARCHAR" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+    <result column="parameter_list" property="parameterList" jdbcType="VARCHAR" />
+    <result column="business_statu" property="businessStatu" jdbcType="VARCHAR" />
+    <result column="areacode" property="areacode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="box_mac" property="boxMac" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="fail_count" property="failCount" jdbcType="INTEGER" />
+    <result column="provCode" property="provcode" jdbcType="VARCHAR" />
+    <result column="userId_boss" property="useridBoss" jdbcType="VARCHAR" />
+    <result column="orderTime_boss" property="ordertimeBoss" jdbcType="TIMESTAMP" />
+    <result column="deviceType" property="devicetype" jdbcType="VARCHAR" />
+    <result column="userName_boss" property="usernameBoss" jdbcType="VARCHAR" />
+    <result column="userAddress_boss" property="useraddressBoss" jdbcType="VARCHAR" />
+    <result column="contactPerson_boss" property="contactpersonBoss" jdbcType="VARCHAR" />
+    <result column="contactManner_boss" property="contactmannerBoss" jdbcType="VARCHAR" />
+    <result column="ipoeId" property="ipoeid" jdbcType="VARCHAR" />
+    <result column="ipoePassword" property="ipoepassword" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="userIdPassword" property="useridpassword" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, box_uuid, business_code_boss, business_code, business_name, parameter_list, business_statu, 
+    areacode, create_time, business_type, box_mac, order_no, update_time, fail_count, 
+    provCode, userId_boss, orderTime_boss, deviceType, userName_boss, userAddress_boss, 
+    contactPerson_boss, contactManner_boss, ipoeId, ipoePassword, userId, userIdPassword
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.BoxBusinessExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_box_business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_box_business
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_box_business
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cmiot.rms.dao.model.BoxBusinessExample" >
+    delete from t_box_business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.BoxBusiness" >
+    insert into t_box_business (id, box_uuid, business_code_boss, 
+      business_code, business_name, parameter_list, 
+      business_statu, areacode, create_time, 
+      business_type, box_mac, order_no, 
+      update_time, fail_count, provCode, 
+      userId_boss, orderTime_boss, deviceType, 
+      userName_boss, userAddress_boss, 
+      contactPerson_boss, contactManner_boss, ipoeId, 
+      ipoePassword, userId, userIdPassword
+      )
+    values (#{id,jdbcType=VARCHAR}, #{boxUuid,jdbcType=VARCHAR}, #{businessCodeBoss,jdbcType=VARCHAR}, 
+      #{businessCode,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{parameterList,jdbcType=VARCHAR}, 
+      #{businessStatu,jdbcType=VARCHAR}, #{areacode,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
+      #{businessType,jdbcType=VARCHAR}, #{boxMac,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=INTEGER}, #{failCount,jdbcType=INTEGER}, #{provcode,jdbcType=VARCHAR}, 
+      #{useridBoss,jdbcType=VARCHAR}, #{ordertimeBoss,jdbcType=TIMESTAMP}, #{devicetype,jdbcType=VARCHAR}, 
+      #{usernameBoss,jdbcType=VARCHAR}, #{useraddressBoss,jdbcType=VARCHAR}, 
+      #{contactpersonBoss,jdbcType=VARCHAR}, #{contactmannerBoss,jdbcType=VARCHAR}, #{ipoeid,jdbcType=VARCHAR}, 
+      #{ipoepassword,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{useridpassword,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.BoxBusiness" >
+    insert into t_box_business
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="boxUuid != null" >
+        box_uuid,
+      </if>
+      <if test="businessCodeBoss != null" >
+        business_code_boss,
+      </if>
+      <if test="businessCode != null" >
+        business_code,
+      </if>
+      <if test="businessName != null" >
+        business_name,
+      </if>
+      <if test="parameterList != null" >
+        parameter_list,
+      </if>
+      <if test="businessStatu != null" >
+        business_statu,
+      </if>
+      <if test="areacode != null" >
+        areacode,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="businessType != null" >
+        business_type,
+      </if>
+      <if test="boxMac != null" >
+        box_mac,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="failCount != null" >
+        fail_count,
+      </if>
+      <if test="provcode != null" >
+        provCode,
+      </if>
+      <if test="useridBoss != null" >
+        userId_boss,
+      </if>
+      <if test="ordertimeBoss != null" >
+        orderTime_boss,
+      </if>
+      <if test="devicetype != null" >
+        deviceType,
+      </if>
+      <if test="usernameBoss != null" >
+        userName_boss,
+      </if>
+      <if test="useraddressBoss != null" >
+        userAddress_boss,
+      </if>
+      <if test="contactpersonBoss != null" >
+        contactPerson_boss,
+      </if>
+      <if test="contactmannerBoss != null" >
+        contactManner_boss,
+      </if>
+      <if test="ipoeid != null" >
+        ipoeId,
+      </if>
+      <if test="ipoepassword != null" >
+        ipoePassword,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="useridpassword != null" >
+        userIdPassword,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="boxUuid != null" >
+        #{boxUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCodeBoss != null" >
+        #{businessCodeBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCode != null" >
+        #{businessCode,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null" >
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterList != null" >
+        #{parameterList,jdbcType=VARCHAR},
+      </if>
+      <if test="businessStatu != null" >
+        #{businessStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="areacode != null" >
+        #{areacode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="boxMac != null" >
+        #{boxMac,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="failCount != null" >
+        #{failCount,jdbcType=INTEGER},
+      </if>
+      <if test="provcode != null" >
+        #{provcode,jdbcType=VARCHAR},
+      </if>
+      <if test="useridBoss != null" >
+        #{useridBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertimeBoss != null" >
+        #{ordertimeBoss,jdbcType=TIMESTAMP},
+      </if>
+      <if test="devicetype != null" >
+        #{devicetype,jdbcType=VARCHAR},
+      </if>
+      <if test="usernameBoss != null" >
+        #{usernameBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="useraddressBoss != null" >
+        #{useraddressBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="contactpersonBoss != null" >
+        #{contactpersonBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="contactmannerBoss != null" >
+        #{contactmannerBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="ipoeid != null" >
+        #{ipoeid,jdbcType=VARCHAR},
+      </if>
+      <if test="ipoepassword != null" >
+        #{ipoepassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="useridpassword != null" >
+        #{useridpassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cmiot.rms.dao.model.BoxBusinessExample" resultType="java.lang.Integer" >
+    select count(*) from t_box_business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_box_business
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxUuid != null" >
+        box_uuid = #{record.boxUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessCodeBoss != null" >
+        business_code_boss = #{record.businessCodeBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessCode != null" >
+        business_code = #{record.businessCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessName != null" >
+        business_name = #{record.businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parameterList != null" >
+        parameter_list = #{record.parameterList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessStatu != null" >
+        business_statu = #{record.businessStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="record.areacode != null" >
+        areacode = #{record.areacode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.businessType != null" >
+        business_type = #{record.businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxMac != null" >
+        box_mac = #{record.boxMac,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null" >
+        order_no = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.failCount != null" >
+        fail_count = #{record.failCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.provcode != null" >
+        provCode = #{record.provcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useridBoss != null" >
+        userId_boss = #{record.useridBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ordertimeBoss != null" >
+        orderTime_boss = #{record.ordertimeBoss,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.devicetype != null" >
+        deviceType = #{record.devicetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usernameBoss != null" >
+        userName_boss = #{record.usernameBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useraddressBoss != null" >
+        userAddress_boss = #{record.useraddressBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactpersonBoss != null" >
+        contactPerson_boss = #{record.contactpersonBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactmannerBoss != null" >
+        contactManner_boss = #{record.contactmannerBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipoeid != null" >
+        ipoeId = #{record.ipoeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipoepassword != null" >
+        ipoePassword = #{record.ipoepassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userid != null" >
+        userId = #{record.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useridpassword != null" >
+        userIdPassword = #{record.useridpassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_box_business
+    set id = #{record.id,jdbcType=VARCHAR},
+      box_uuid = #{record.boxUuid,jdbcType=VARCHAR},
+      business_code_boss = #{record.businessCodeBoss,jdbcType=VARCHAR},
+      business_code = #{record.businessCode,jdbcType=VARCHAR},
+      business_name = #{record.businessName,jdbcType=VARCHAR},
+      parameter_list = #{record.parameterList,jdbcType=VARCHAR},
+      business_statu = #{record.businessStatu,jdbcType=VARCHAR},
+      areacode = #{record.areacode,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      business_type = #{record.businessType,jdbcType=VARCHAR},
+      box_mac = #{record.boxMac,jdbcType=VARCHAR},
+      order_no = #{record.orderNo,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      fail_count = #{record.failCount,jdbcType=INTEGER},
+      provCode = #{record.provcode,jdbcType=VARCHAR},
+      userId_boss = #{record.useridBoss,jdbcType=VARCHAR},
+      orderTime_boss = #{record.ordertimeBoss,jdbcType=TIMESTAMP},
+      deviceType = #{record.devicetype,jdbcType=VARCHAR},
+      userName_boss = #{record.usernameBoss,jdbcType=VARCHAR},
+      userAddress_boss = #{record.useraddressBoss,jdbcType=VARCHAR},
+      contactPerson_boss = #{record.contactpersonBoss,jdbcType=VARCHAR},
+      contactManner_boss = #{record.contactmannerBoss,jdbcType=VARCHAR},
+      ipoeId = #{record.ipoeid,jdbcType=VARCHAR},
+      ipoePassword = #{record.ipoepassword,jdbcType=VARCHAR},
+      userId = #{record.userid,jdbcType=VARCHAR},
+      userIdPassword = #{record.useridpassword,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.BoxBusiness" >
+    update t_box_business
+    <set >
+      <if test="boxUuid != null" >
+        box_uuid = #{boxUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCodeBoss != null" >
+        business_code_boss = #{businessCodeBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCode != null" >
+        business_code = #{businessCode,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null" >
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterList != null" >
+        parameter_list = #{parameterList,jdbcType=VARCHAR},
+      </if>
+      <if test="businessStatu != null" >
+        business_statu = #{businessStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="areacode != null" >
+        areacode = #{areacode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="businessType != null" >
+        business_type = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="boxMac != null" >
+        box_mac = #{boxMac,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="failCount != null" >
+        fail_count = #{failCount,jdbcType=INTEGER},
+      </if>
+      <if test="provcode != null" >
+        provCode = #{provcode,jdbcType=VARCHAR},
+      </if>
+      <if test="useridBoss != null" >
+        userId_boss = #{useridBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertimeBoss != null" >
+        orderTime_boss = #{ordertimeBoss,jdbcType=TIMESTAMP},
+      </if>
+      <if test="devicetype != null" >
+        deviceType = #{devicetype,jdbcType=VARCHAR},
+      </if>
+      <if test="usernameBoss != null" >
+        userName_boss = #{usernameBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="useraddressBoss != null" >
+        userAddress_boss = #{useraddressBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="contactpersonBoss != null" >
+        contactPerson_boss = #{contactpersonBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="contactmannerBoss != null" >
+        contactManner_boss = #{contactmannerBoss,jdbcType=VARCHAR},
+      </if>
+      <if test="ipoeid != null" >
+        ipoeId = #{ipoeid,jdbcType=VARCHAR},
+      </if>
+      <if test="ipoepassword != null" >
+        ipoePassword = #{ipoepassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="useridpassword != null" >
+        userIdPassword = #{useridpassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.BoxBusiness" >
+    update t_box_business
+    set box_uuid = #{boxUuid,jdbcType=VARCHAR},
+      business_code_boss = #{businessCodeBoss,jdbcType=VARCHAR},
+      business_code = #{businessCode,jdbcType=VARCHAR},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      parameter_list = #{parameterList,jdbcType=VARCHAR},
+      business_statu = #{businessStatu,jdbcType=VARCHAR},
+      areacode = #{areacode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      business_type = #{businessType,jdbcType=VARCHAR},
+      box_mac = #{boxMac,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      fail_count = #{failCount,jdbcType=INTEGER},
+      provCode = #{provcode,jdbcType=VARCHAR},
+      userId_boss = #{useridBoss,jdbcType=VARCHAR},
+      orderTime_boss = #{ordertimeBoss,jdbcType=TIMESTAMP},
+      deviceType = #{devicetype,jdbcType=VARCHAR},
+      userName_boss = #{usernameBoss,jdbcType=VARCHAR},
+      userAddress_boss = #{useraddressBoss,jdbcType=VARCHAR},
+      contactPerson_boss = #{contactpersonBoss,jdbcType=VARCHAR},
+      contactManner_boss = #{contactmannerBoss,jdbcType=VARCHAR},
+      ipoeId = #{ipoeid,jdbcType=VARCHAR},
+      ipoePassword = #{ipoepassword,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR},
+      userIdPassword = #{useridpassword,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

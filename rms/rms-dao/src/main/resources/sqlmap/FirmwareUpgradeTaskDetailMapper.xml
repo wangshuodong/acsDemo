@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmiot.rms.dao.mapper.FirmwareUpgradeTaskDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="gateway_id" property="gatewayId" jdbcType="VARCHAR" />
+    <result column="gateway_name" property="gatewayName" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="firmware_id" property="firmwareId" jdbcType="VARCHAR" />
+    <result column="firmware_version" property="firmwareVersion" jdbcType="VARCHAR" />
+    <result column="previous_firmware_id" property="previousFirmwareId" jdbcType="VARCHAR" />
+    <result column="previous_firmware_version" property="previousFirmwareVersion" jdbcType="VARCHAR" />
+    <result column="upgrade_start_time" property="upgradeStartTime" jdbcType="INTEGER" />
+    <result column="upgrade_end_time" property="upgradeEndTime" jdbcType="INTEGER" />
+    <result column="is_retry" property="isRetry" jdbcType="BIT" />
+    <result column="retry_times" property="retryTimes" jdbcType="INTEGER" />
+    <result column="upgrade_task_id" property="upgradeTaskId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, gateway_id, gateway_name, status, firmware_id, firmware_version, previous_firmware_id,
+    previous_firmware_version, upgrade_start_time, upgrade_end_time, is_retry, retry_times,
+    upgrade_task_id
+  </sql>
+
+	<select id="queryList4Page" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_firmware_upgrade_task_detail
+	</select>
+
+	<select id="queryList" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_firmware_upgrade_task_detail
+		where 1=1
+        <if test="upgradeTaskId != null">
+        and upgrade_task_id =
+        #{upgradeTaskId,jdbcType=VARCHAR}
+       </if>
+       <if test="status != null">
+        and status =
+        #{status,jdbcType=INTEGER}
+        </if>
+      <if test="gatewayId != null">
+        and gateway_id =  #{gatewayId,jdbcType=VARCHAR}
+      </if>
+	</select>
+
+  <select id="queryListByTaskUuid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_firmware_upgrade_task_detail
+    where upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <update id="updateSelectFirmwareUpgradeTaskDetailByGateUuid" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail">
+    update t_firmware_upgrade_task_detail
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where GATEWAY_INFO_UUID = #{gatewayInfoUuid,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_firmware_upgrade_task_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_firmware_upgrade_task_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail" >
+    insert into t_firmware_upgrade_task_detail (id, gateway_id, gateway_name,
+    status, firmware_id, firmware_version,
+    previous_firmware_id, previous_firmware_version,
+    upgrade_start_time, upgrade_end_time, is_retry,
+    retry_times, upgrade_task_id)
+    values (#{id,jdbcType=VARCHAR}, #{gatewayId,jdbcType=VARCHAR}, #{gatewayName,jdbcType=CHAR},
+    #{status,jdbcType=INTEGER}, #{firmwareId,jdbcType=VARCHAR}, #{firmwareVersion,jdbcType=VARCHAR},
+    #{previousFirmwareId,jdbcType=VARCHAR}, #{previousFirmwareVersion,jdbcType=VARCHAR},
+    #{upgradeStartTime,jdbcType=INTEGER}, #{upgradeEndTime,jdbcType=INTEGER}, #{isRetry,jdbcType=BIT},
+    #{retryTimes,jdbcType=INTEGER}, #{upgradeTaskId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail" >
+    insert into t_firmware_upgrade_task_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gatewayId != null" >
+        gateway_id,
+      </if>
+      <if test="gatewayName != null" >
+        gateway_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="firmwareId != null" >
+        firmware_id,
+      </if>
+      <if test="firmwareVersion != null" >
+        firmware_version,
+      </if>
+      <if test="previousFirmwareId != null" >
+        previous_firmware_id,
+      </if>
+      <if test="previousFirmwareVersion != null" >
+        previous_firmware_version,
+      </if>
+      <if test="upgradeStartTime != null" >
+        upgrade_start_time,
+      </if>
+      <if test="upgradeEndTime != null" >
+        upgrade_end_time,
+      </if>
+      <if test="isRetry != null" >
+        is_retry,
+      </if>
+      <if test="retryTimes != null" >
+        retry_times,
+      </if>
+      <if test="upgradeTaskId != null" >
+        upgrade_task_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="gatewayId != null" >
+        #{gatewayId,jdbcType=VARCHAR},
+      </if>
+      <if test="gatewayName != null" >
+        #{gatewayName,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="firmwareId != null" >
+        #{firmwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="firmwareVersion != null" >
+        #{firmwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="previousFirmwareId != null" >
+        #{previousFirmwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="previousFirmwareVersion != null" >
+        #{previousFirmwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeStartTime != null" >
+        #{upgradeStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="upgradeEndTime != null" >
+        #{upgradeEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="isRetry != null" >
+        #{isRetry,jdbcType=BIT},
+      </if>
+      <if test="retryTimes != null" >
+        #{retryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="upgradeTaskId != null" >
+        #{upgradeTaskId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail" >
+    update t_firmware_upgrade_task_detail
+    <set >
+      <if test="gatewayId != null" >
+        gateway_id = #{gatewayId,jdbcType=VARCHAR},
+      </if>
+      <if test="gatewayName != null" >
+        gateway_name = #{gatewayName,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="firmwareId != null" >
+        firmware_id = #{firmwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="firmwareVersion != null" >
+        firmware_version = #{firmwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="previousFirmwareId != null" >
+        previous_firmware_id = #{previousFirmwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="previousFirmwareVersion != null" >
+        previous_firmware_version = #{previousFirmwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeStartTime != null" >
+        upgrade_start_time = #{upgradeStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="upgradeEndTime != null" >
+        upgrade_end_time = #{upgradeEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="isRetry != null" >
+        is_retry = #{isRetry,jdbcType=BIT},
+      </if>
+      <if test="retryTimes != null" >
+        retry_times = #{retryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="upgradeTaskId != null" >
+        upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail" >
+    update t_firmware_upgrade_task_detail
+    set gateway_id = #{gatewayId,jdbcType=VARCHAR},
+    gateway_name = #{gatewayName,jdbcType=CHAR},
+    status = #{status,jdbcType=INTEGER},
+    firmware_id = #{firmwareId,jdbcType=VARCHAR},
+    firmware_version = #{firmwareVersion,jdbcType=VARCHAR},
+    previous_firmware_id = #{previousFirmwareId,jdbcType=VARCHAR},
+    previous_firmware_version = #{previousFirmwareVersion,jdbcType=VARCHAR},
+    upgrade_start_time = #{upgradeStartTime,jdbcType=INTEGER},
+    upgrade_end_time = #{upgradeEndTime,jdbcType=INTEGER},
+    is_retry = #{isRetry,jdbcType=BIT},
+    retry_times = #{retryTimes,jdbcType=INTEGER},
+    upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateTaskDetailStatus" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail">
+    update t_firmware_upgrade_task_detail
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where gateway_id = #{gatewayId,jdbcType=VARCHAR} and upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="batchUpdateProcessingStatusAndTime" parameterType="java.util.HashMap">
+    update t_firmware_upgrade_task_detail  set status = 1, upgrade_start_time = #{upgradeStartTime,jdbcType=INTEGER}
+    where id IN
+    <foreach  collection="ids" index="index" item="item" open="(" separator="," close=")">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+
+  <select id="queryListByIdAndStatus" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+  	SELECT b.gateway_macaddress,c.manufacturer_name as factory_name,b.gateway_model,
+  		b.gateway_version,a.firmware_version,b.gateway_area_id area_id
+	FROM  t_firmware_upgrade_task_detail a ,t_gateway_info b ,t_manufacturer_info c
+	WHERE a.gateway_id=b.gateway_uuid and b.new_factory_code=c.id
+		and a.upgrade_task_id=#{upgradeTaskId,jdbcType=VARCHAR}
+	<if test="type=='list'">
+		and (status=0 or status=1)
+	</if>
+	<if test="type=='failure'">
+		and status=2
+	</if>
+	<if test="type=='success'">
+		and status=3
+	</if>
+  </select>
+
+
+  <select id="searchTaskDetailCount" parameterType="java.util.HashMap" resultType="int" >
+    SELECT count(*) FROM t_firmware_upgrade_task_detail
+    <where>
+      <if test="upgradeTaskId != null">
+        upgrade_task_id = #{upgradeTaskId}
+      </if>
+      <if test="status != null">
+        AND  status = #{status}
+      </if>
+    </where>
+  </select>
+
+  <select id="searchNoSuccessCount" parameterType="java.lang.String" resultType="int" >
+    SELECT count(*) FROM t_firmware_upgrade_task_detail
+    WHERE  firmware_id = #{firmwareId} AND  status &lt;&gt;  3
+  </select>
+
+  <select id="queryListByTaskId" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_firmware_upgrade_task_detail
+    where upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR} and status = #{status,jdbcType=INTEGER}
+    LIMIT #{startRows,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryCount" parameterType="java.util.HashMap" resultType="int">
+    select count(*)
+    from t_firmware_upgrade_task_detail
+    where upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR} and status = #{status,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectGateWayInfo" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select t.*
+    from t_firmware_upgrade_task_detail t, t_firmware_upgrade_task u
+    where t.upgrade_task_id = u.id
+    and u.task_trigger_mode=2
+    and t.status=0
+    and t.gateway_id = #{gatewayId,jdbcType=VARCHAR}
+    and u.task_trigger_event = #{event,jdbcType=INTEGER}
+    ORDER BY u.task_create_time ASC
+  </select>
+
+  <select id="searchLatelyImmediatelyDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select d.*
+    from t_firmware_upgrade_task_detail d, t_firmware_upgrade_task t
+    where d.upgrade_task_id = t.id
+	and t.task_trigger_mode=3
+    and d.gateway_id = #{gatewayId,jdbcType=VARCHAR}
+    ORDER BY t.task_create_time DESC
+  </select>
+
+
+  <select id="searchProcessingCount" parameterType="java.lang.String" resultType="int">
+    select count(*)
+    from t_firmware_upgrade_task_detail
+    where status = 1
+    and gateway_id = #{gatewayId,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into t_firmware_upgrade_task_detail (id, gateway_id, gateway_name,
+    status, firmware_id, firmware_version,
+    previous_firmware_id, previous_firmware_version,
+    upgrade_start_time, upgrade_end_time, is_retry,
+    retry_times, upgrade_task_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.id}, #{item.gatewayId}, #{item.gatewayName},
+      #{item.status}, #{item.firmwareId}, #{item.firmwareVersion},
+      #{item.previousFirmwareId}, #{item.previousFirmwareVersion},
+      #{item.upgradeStartTime}, #{item.upgradeEndTime}, #{item.isRetry},
+      #{item.retryTimes}, #{item.upgradeTaskId})
+    </foreach>
+  </insert>
+
+  <select id="queryListNoComplete" parameterType="com.cmiot.rms.dao.model.FirmwareUpgradeTaskDetail"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_firmware_upgrade_task_detail
+    where upgrade_task_id = #{upgradeTaskId,jdbcType=VARCHAR}
+    and status in(0,1)
+  </select>
+</mapper>

@@ -1,0 +1,1169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmiot.rms.dao.mapper.GatewayInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.GatewayInfo">
+        <id column="GATEWAY_UUID" jdbcType="VARCHAR" property="gatewayUuid" />
+        <result column="GATEWAY_TYPE" jdbcType="CHAR" property="gatewayType" />
+        <result column="GATEWAY_MODEL" jdbcType="CHAR" property="gatewayModel" />
+        <result column="GATEWAY_NAME" jdbcType="CHAR" property="gatewayName" />
+        <result column="GATEWAY_VERSION" jdbcType="VARCHAR" property="gatewayVersion" />
+        <result column="GATEWAY_SERIALNUMBER" jdbcType="VARCHAR" property="gatewaySerialnumber" />
+        <result column="GATEWAY_FACTORY" jdbcType="CHAR" property="gatewayFactory" />
+        <result column="GATEWAY_FACTORY_CODE" jdbcType="CHAR" property="gatewayFactoryCode" />
+        <result column="GATEWAY_MEMO" jdbcType="VARCHAR" property="gatewayMemo" />
+        <result column="GATEWAY_HARDWARE_VERSION" jdbcType="VARCHAR" property="gatewayHardwareVersion" />
+        <result column="GATEWAY_JOIN_TIME" jdbcType="INTEGER" property="gatewayJoinTime" />
+        <result column="GATEWAY_LAST_CONN_TIME" jdbcType="INTEGER" property="gatewayLastConnTime" />
+        <result column="GATEWAY_ADSL_ACCOUNT" jdbcType="VARCHAR" property="gatewayAdslAccount" />
+        <result column="GATEWAY_STATUS" jdbcType="VARCHAR" property="gatewayStatus" />
+        <result column="GATEWAY_IPADDRESS" jdbcType="VARCHAR" property="gatewayIpaddress" />
+        <result column="GATEWAY_MACADDRESS" jdbcType="VARCHAR" property="gatewayMacaddress" />
+        <result column="GATEWAY_CONNECTIONREQUESTURL" jdbcType="VARCHAR" property="gatewayConnectionrequesturl" />
+        <result column="GATEWAY_AREA_ID" jdbcType="VARCHAR" property="gatewayAreaId" />
+        <result column="GATEWAY_AREA_Name" jdbcType="VARCHAR" property="gatewayAreaName" />
+        <result column="GATEWAY_DEVICE_UUID" jdbcType="VARCHAR" property="gatewayDeviceUuid" />
+        <result column="DEVICE_MODEL" jdbcType="VARCHAR" property="deviceModel" />
+        <result column="GATEWAY_FIRMWARE_UUID" jdbcType="VARCHAR" property="gatewayFirmwareUuid" />
+        <result column="GATEWAY_EXTERNALIPADDRESS" jdbcType="VARCHAR" property="gatewayExternalIPaddress" />
+        <result column="GATEWAY_PASSWORD" jdbcType="VARCHAR" property="gatewayPassword" />
+        <result column="GATEWAY_DIGEST_ACCOUNT" jdbcType="VARCHAR" property="gatewayDigestAccount" />
+        <result column="GATEWAY_DIGEST_PASSWORD" jdbcType="VARCHAR" property="gatewayDigestPassword" />
+        <result column="GATEWAY_FAMILY_ACCOUNT" jdbcType="VARCHAR" property="gatewayFamilyAccount" />
+        <result column="GATEWAY_FAMILY_PASSWORD" jdbcType="VARCHAR" property="gatewayFamilyPassword" />
+        <result column="OSGI" jdbcType="VARCHAR" property="osgi" />
+        <result column="JVM" jdbcType="VARCHAR" property="jvm" />
+        <result column="gateway_connectionrequest_username" jdbcType="VARCHAR" property="gatewayConnectionrequestUsername" />
+        <result column="gateway_connectionrequest_password" jdbcType="VARCHAR" property="gatewayConnectionrequestPassword" />
+        <result column="backup_file_max_number" property="backupFileMaxNumber" jdbcType="INTEGER" />
+        <result column="log_switch_status" property="logSwitchStatus" jdbcType="INTEGER" />
+        <result column="flowrate" property="flowRate" jdbcType="VARCHAR" />
+        <result column="business_status" property="businessStatus" jdbcType="VARCHAR" />
+        <result column="new_factory_code" property="newFactoryCode" jdbcType="VARCHAR" />
+        <result column="useradminInitPwd" property="uadminInitPwd" jdbcType="VARCHAR" />
+    </resultMap>
+     <resultMap id="ResultMapWithGatewayBean" type="com.cmiot.rms.dao.model.derivedclass.GatewayBean" extends="BaseResultMap" >
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        GATEWAY_UUID, GATEWAY_TYPE, GATEWAY_MODEL, GATEWAY_NAME, GATEWAY_VERSION,
+        GATEWAY_SERIALNUMBER, GATEWAY_FACTORY_CODE,new_factory_code, GATEWAY_MEMO,
+        GATEWAY_HARDWARE_VERSION, GATEWAY_JOIN_TIME, GATEWAY_LAST_CONN_TIME,
+        GATEWAY_ADSL_ACCOUNT, GATEWAY_STATUS, GATEWAY_IPADDRESS,
+        GATEWAY_MACADDRESS,
+        GATEWAY_CONNECTIONREQUESTURL,
+        GATEWAY_AREA_ID, GATEWAY_DEVICE_UUID, GATEWAY_FIRMWARE_UUID,GATEWAY_EXTERNALIPADDRESS,
+        GATEWAY_PASSWORD,
+        GATEWAY_DIGEST_ACCOUNT,GATEWAY_DIGEST_PASSWORD,GATEWAY_FAMILY_ACCOUNT,GATEWAY_FAMILY_PASSWORD, OSGI, JVM, backup_file_max_number,gateway_connectionrequest_username,
+        gateway_connectionrequest_password, log_switch_status,flowrate,business_status,ssidInitLastnumber,ssidInitPwd,useradminInitPwd
+    </sql>
+
+    <select id="queryList4Page" parameterType="com.cmiot.rms.dao.model.GatewayInfo"
+            resultMap="ResultMapWithGatewayBean">
+        select
+        a.GATEWAY_MACADDRESS,
+        a.gateway_model AS DEVICE_MODEL,
+        a.GATEWAY_UUID,a.GATEWAY_TYPE,a.GATEWAY_MODEL,a.GATEWAY_NAME,
+        a.GATEWAY_VERSION,a.GATEWAY_SERIALNUMBER,a.GATEWAY_FACTORY_CODE,
+        a.GATEWAY_MEMO,a.GATEWAY_HARDWARE_VERSION,a.GATEWAY_JOIN_TIME,a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT,a.GATEWAY_STATUS,a.GATEWAY_IPADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,a.GATEWAY_AREA_ID,
+        a.GATEWAY_DEVICE_UUID,a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_EXTERNALIPADDRESS,
+        a.GATEWAY_PASSWORD,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,
+        a.GATEWAY_FAMILY_ACCOUNT,a.GATEWAY_FAMILY_PASSWORD, a.log_switch_status,a.gateway_connectionrequest_username,
+        a.gateway_connectionrequest_password,
+        <!--(SELECT manufacturer_name FROM t_manufacturer_info WHERE code = a.new_factory_code) AS GATEWAY_FACTORY-->
+        (SELECT manufacturer_name FROM t_manufacturer_info WHERE id = a.new_factory_code ) AS gateway_factory
+        FROM
+        t_gateway_info a
+        WHERE
+        1 = 1
+
+            <if test='makeMerchantsId != null and gatewayFactoryCode == null'>
+            <!-- and a.gateway_factory_code IN (SELECT factory_code FROM t_factory_info WHERE manufacturer_id in (SELECT id FROM t_manufacturer_info WHERE make_id = #{makeMerchantsId,jdbcType=VARCHAR}))-->
+              and a.new_factory_code in (SELECT id FROM  t_manufacturer_info WHERE make_id = #{makeMerchantsId,jdbcType=VARCHAR})
+            </if>
+
+            <if test='gatewayFactoryCode != null'>
+                and a.new_factory_code = #{gatewayFactoryCode,jdbcType=VARCHAR}
+            </if>
+            <if test='gatewayAreaId != null and gatewayAreaId != "0"'>
+                and (a.GATEWAY_AREA_ID in ${gatewayAreaId}  OR a.GATEWAY_AREA_ID = '' OR a.GATEWAY_AREA_ID IS NULL)
+
+        </if>
+        <if test="gatewayFactory != null">
+            and a.GATEWAY_FACTORY =
+            #{gatewayFactory,jdbcType=CHAR}
+        </if>
+        <!-- 宽带账号 -->
+        <if test="gatewayAdslAccount != null">
+            and a.GATEWAY_ADSL_ACCOUNT like
+            CONCAT('%',
+            #{gatewayAdslAccount},'%' )
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and a.GATEWAY_SERIALNUMBER like
+            CONCAT('%',
+            #{gatewaySerialnumber},'%' )
+        </if>
+        <if test="gatewayMacaddress != null">
+            and a.GATEWAY_MACADDRESS like
+            CONCAT('%',
+            #{gatewayMacaddress},'%' )
+        </if>
+        <!-- 设备型号 -->
+        <if test="gatewayModel!=null">
+            and a.GATEWAY_MODEL =
+            #{gatewayModel,jdbcType=CHAR}
+        </if>
+        <!-- 固件版本 -->
+        <if test="gatewayVersion!=null">
+            and a.GATEWAY_VERSION =
+            #{gatewayVersion,jdbcType=CHAR}
+        </if>
+        <if test="gatewayType!=null">
+            and a.GATEWAY_TYPE =
+            #{gatewayType,jdbcType=CHAR}
+        </if>
+        <if test="businessCode!=null">
+            and a.gateway_uuid in (select gateway_uuid from t_gateway_business_open_detail where 1=1 and open_status = 1 and business_code_boss = #{businessCode,jdbcType=CHAR})
+        </if>
+        <if test='gatewayUuid != null and gatewayUuid != "0"'>
+            and a.gateway_uuid in ${gatewayUuid}
+        </if>
+        <if test="gatewayPassword!=null">
+            and a.GATEWAY_PASSWORD like
+            CONCAT('%',#{gatewayPassword},'%' )
+        </if>
+
+    </select>
+
+
+    <select id="queryList4PageNoArea" parameterType="com.cmiot.rms.dao.model.GatewayInfo"
+            resultMap="ResultMapWithGatewayBean">
+        select
+        a.GATEWAY_MACADDRESS,
+        a.gateway_model AS DEVICE_MODEL,
+        a.GATEWAY_UUID,a.GATEWAY_TYPE,a.GATEWAY_MODEL,a.GATEWAY_NAME,
+        a.GATEWAY_VERSION,a.GATEWAY_SERIALNUMBER,a.GATEWAY_FACTORY_CODE,
+        a.GATEWAY_MEMO,a.GATEWAY_HARDWARE_VERSION,a.GATEWAY_JOIN_TIME,a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT,a.GATEWAY_STATUS,a.GATEWAY_IPADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,a.GATEWAY_AREA_ID,
+        a.GATEWAY_DEVICE_UUID,a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_EXTERNALIPADDRESS,
+        a.GATEWAY_PASSWORD,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,
+        a.GATEWAY_FAMILY_ACCOUNT,a.GATEWAY_FAMILY_PASSWORD, a.log_switch_status,a.gateway_connectionrequest_username,
+        a.gateway_connectionrequest_password,
+        <!--(SELECT manufacturer_name FROM t_manufacturer_info WHERE code = a.new_factory_code) AS GATEWAY_FACTORY-->
+        (SELECT manufacturer_name FROM t_manufacturer_info WHERE id = a.new_factory_code ) AS gateway_factory
+        FROM
+        t_gateway_info a
+        WHERE
+        1 = 1
+
+        <if test='makeMerchantsId != null and gatewayFactoryCode == null'>
+           <!-- and a.gateway_factory_code IN (SELECT factory_code FROM t_factory_info WHERE manufacturer_id in (SELECT id FROM t_manufacturer_info WHERE make_id = #{makeMerchantsId,jdbcType=VARCHAR}))-->
+            and a.new_factory_code in (SELECT id FROM  t_manufacturer_info WHERE make_id = #{makeMerchantsId,jdbcType=VARCHAR})
+        </if>
+        <if test='gatewayFactoryCode != null'>
+            and a.new_factory_code = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test='gatewayAreaId != null and gatewayAreaId != "0"'>
+            and (a.GATEWAY_AREA_ID in ${gatewayAreaId})
+        </if>
+        <if test="gatewayFactory != null">
+            and a.GATEWAY_FACTORY =
+            #{gatewayFactory,jdbcType=CHAR}
+        </if>
+        <!-- 宽带账号 -->
+        <if test="gatewayAdslAccount != null">
+            and a.GATEWAY_ADSL_ACCOUNT like
+            CONCAT('%',
+            #{gatewayAdslAccount},'%' )
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and a.GATEWAY_SERIALNUMBER like
+            CONCAT('%',
+            #{gatewaySerialnumber},'%' )
+        </if>
+        <if test="gatewayMacaddress != null">
+            and a.GATEWAY_MACADDRESS like
+            CONCAT('%',
+            #{gatewayMacaddress},'%' )
+        </if>
+        <!-- 设备型号 -->
+        <if test="gatewayModel!=null">
+            and a.GATEWAY_MODEL =
+            #{gatewayModel,jdbcType=CHAR}
+        </if>
+        <!-- 固件版本 -->
+        <if test="gatewayVersion!=null">
+            and a.GATEWAY_VERSION =
+            #{gatewayVersion,jdbcType=CHAR}
+        </if>
+        <if test="gatewayType!=null">
+            and a.GATEWAY_TYPE =
+            #{gatewayType,jdbcType=CHAR}
+        </if>
+        <if test="businessCode!=null">
+            and a.gateway_uuid in (select gateway_uuid from t_gateway_business_open_detail where 1=1 and open_status = 1 and business_code_boss = #{businessCode,jdbcType=CHAR})
+        </if>
+        <if test='gatewayUuid != null and gatewayUuid != "0"'>
+            and a.gateway_uuid in ${gatewayUuid}
+        </if>
+        <if test="gatewayPassword!=null">
+            and a.GATEWAY_PASSWORD like
+            CONCAT('%',#{gatewayPassword},'%' )
+        </if>
+    </select>
+
+
+    <select id="queryCount" parameterType="java.util.Map" resultType="long">
+        select count(*) from t_gateway_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test='gatewayInfoFactoryCode != null and gatewayInfoFactoryCode != "0" and gatewayInfoFactoryCode != ""'>
+                and GATEWAY_FACTORY_CODE = #{gatewayInfoFactoryCode,jdbcType=CHAR}
+            </if>
+            <if test='makeMerchantsId != null and makeMerchantsId != "0" and makeMerchantsId != ""'>
+                and GATEWAY_FACTORY_CODE in (select factory_code from  t_factory_info where manufacturer_id = #{makeMerchantsId,jdbcType=VARCHAR})
+            </if>
+            <if test='makeFactory != null and makeFactory != "0" and makeFactory != ""'>
+                and GATEWAY_FACTORY_CODE in (select factory_code from  t_factory_info where manufacturer_id = #{makeFactory,jdbcType=VARCHAR})
+            </if>
+            <if test='gatewayAreaId != null and gatewayAreaId != "0" and gatewayAreaId != ""'>
+                and (GATEWAY_AREA_ID in ${gatewayAreaId}  OR GATEWAY_AREA_ID = '' OR GATEWAY_AREA_ID IS NULL)
+            </if>
+            <if test='gatewayFactory != null and gatewayFactory != "" '>
+                and GATEWAY_FACTORY =#{gatewayFactory,jdbcType=CHAR}
+            </if>
+
+            <if test="gatewayAdslAccount != null">
+                and GATEWAY_ADSL_ACCOUNT like CONCAT('%',#{gatewayAdslAccount},'%' )
+            </if>
+            <if test="gatewaySerialnumber != null">
+                and GATEWAY_SERIALNUMBER like CONCAT('%',#{gatewaySerialnumber},'%' )
+            </if>
+            <if test="gatewayMacaddress != null">
+                and GATEWAY_MACADDRESS like CONCAT('%',#{gatewayMacaddress},'%' )
+            </if>
+            <!-- 宽带账号 -->
+            <if test="gatewayAdslAccount!=null">
+                and GATEWAY_ADSL_ACCOUNT =#{gatewayAdslAccount,jdbcType=CHAR}
+            </if>
+            <!-- 设备型号 -->
+            <if test="gatewayModel!=null">
+                and a.GATEWAY_MODEL =
+                #{gatewayModel,jdbcType=CHAR}
+            </if>
+            <!-- 固件版本 -->
+            <if test="gatewayVersion!=null">
+                and a.GATEWAY_VERSION =
+                #{gatewayVersion,jdbcType=CHAR}
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />, (SELECT manufacturer_name FROM t_manufacturer_info WHERE id = a.new_factory_code) AS GATEWAY_FACTORY
+        from t_gateway_info a
+        WHERE 1 = 1
+        <if test='gatewayInfoFactoryCode != null and gatewayInfoFactoryCode != "0" and gatewayInfoFactoryCode != ""'>
+            and a.new_factory_code = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test='makeFactory != null and makeFactory != "0" and makeFactory != ""'>
+            and a.gateway_factory_code IN (SELECT factory_code FROM t_factory_info WHERE manufacturer_id in (SELECT id FROM t_manufacturer_info WHERE make_id = #{makeMerchantsId,jdbcType=VARCHAR}))
+        </if>
+        <if test='gatewayAreaId != null and gatewayAreaId != "0" and gatewayAreaId != ""'>
+            and (GATEWAY_AREA_ID in ${gatewayAreaId}  OR GATEWAY_AREA_ID = '' OR GATEWAY_AREA_ID IS NULL)
+        </if>
+        <if test='gatewayFactory != null and gatewayFactory != "" '>
+            and GATEWAY_FACTORY =#{gatewayFactory,jdbcType=CHAR}
+        </if>
+        <if test="gatewayAdslAccount != null">
+            and GATEWAY_ADSL_ACCOUNT like CONCAT('%','${gatewayAdslAccount}','%' )
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and GATEWAY_SERIALNUMBER like CONCAT('%','${gatewaySerialnumber}','%' )
+        </if>
+        <if test="gatewayMacaddress != null">
+            and GATEWAY_MACADDRESS =#{gatewayMacaddress,jdbcType=CHAR}
+        </if>
+        <!-- 宽带账号 -->
+        <if test="gatewayAdslAccount!=null">
+            and GATEWAY_ADSL_ACCOUNT =#{gatewayAdslAccount,jdbcType=CHAR}
+        </if>
+        <!--limit #{startLine},#{pageSize}-->
+    </select>
+
+    <!-- 根据设备厂商、设备型号、固件版本和区域查询网关 -->
+    <select id="queryListPage" resultMap="BaseResultMap">
+        select
+        a.GATEWAY_UUID, a.GATEWAY_TYPE, a.GATEWAY_MODEL, a.GATEWAY_NAME, a.GATEWAY_VERSION,
+        a.GATEWAY_SERIALNUMBER, d.manufacturer_name AS GATEWAY_FACTORY, a.new_factory_code GATEWAY_FACTORY_CODE, a.GATEWAY_MEMO,
+        a.GATEWAY_HARDWARE_VERSION, a.GATEWAY_JOIN_TIME, a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT, a.GATEWAY_STATUS, a.GATEWAY_IPADDRESS,
+        a.GATEWAY_MACADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,
+        a.GATEWAY_AREA_ID,a.GATEWAY_PASSWORD, a.GATEWAY_DEVICE_UUID, a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,
+        a.GATEWAY_FAMILY_ACCOUNT,a.GATEWAY_FAMILY_PASSWORD
+        from t_gateway_info a inner join t_firmware_prepared b INNER JOIN t_firmware_info c inner join t_manufacturer_info d
+        WHERE 1=1
+        <if test="gatewayFactoryCode != null ">
+        	and a.new_factory_code = d.id
+            and a.new_factory_code = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayDeviceUuid != null">
+            and a.GATEWAY_DEVICE_UUID =
+            #{gatewayDeviceUuid,jdbcType=CHAR}
+        </if>
+        <if test="gatewayFirmwareUuid!=null">
+            and a.GATEWAY_FIRMWARE_UUID = b.firmware_previous_id
+            and b.firmware_id =  #{gatewayFirmwareUuid,jdbcType=VARCHAR}
+        </if>
+        <if test='gatewayAreaId != null and gatewayAreaId != "0" and gatewayAreaId != ""'>
+            and (a.GATEWAY_AREA_ID in ${gatewayAreaId}  OR a.GATEWAY_AREA_ID = '' OR a.GATEWAY_AREA_ID IS NULL)
+        </if>
+        <if test="gatewayUuid != null">
+            and a.GATEWAY_UUID = #{gatewayUuid,jdbcType=INTEGER}
+        </if>
+        <!-- 显示审批通过的数据 -->
+        AND c.id = b.firmware_id
+        AND c.check_status = 2
+    </select>
+
+    <select id="queryByDeviceArea" parameterType="com.cmiot.rms.dao.model.GatewayInfo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />, f.factory_name as GATEWAY_FACTORY
+        from t_gateway_info a,  t_factory_info f
+        WHERE
+        a.gateway_factory_code = f.factory_code
+        <if test="gatewayAreaId != null">
+            and GATEWAY_AREA_ID =
+            #{gatewayAreaId,jdbcType=CHAR}
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and GATEWAY_SERIALNUMBER =
+            #{gatewaySerialnumber,jdbcType=CHAR}
+        </if>
+    </select>
+
+    <select id="queryList" parameterType="com.cmiot.rms.dao.model.GatewayInfo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />, f.factory_name as GATEWAY_FACTORY
+        from t_gateway_info a,  t_factory_info f
+        WHERE
+        a.gateway_factory_code = f.factory_code
+        <!-- <trim prefix="where" prefixOverrides="and"> -->
+        <!-- <if test="gatewayInfoFactoryCode != null and gatewayInfoFactoryCode
+            !=0"> -->
+        <!-- and GATEWAY_FACTORY_CODE = -->
+        <!-- #{gatewayInfoFactoryCode,jdbcType=VARCHAR} -->
+        <!-- </if> -->
+        <!-- <if test="gatewayAreaId != null and gatewayAreaId !=0"> -->
+        <!-- and GATEWAY_FACTORY_CODE = -->
+        <!-- #{gatewayFactoryCode,jdbcType=INTEGER} -->
+        <!-- </if> -->
+        <!-- </trim> -->
+
+        <if test="gatewayFactoryCode != null ">
+            and GATEWAY_FACTORY_CODE =
+            #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayAreaId != null ">
+            and GATEWAY_AREA_ID = #{gatewayAreaId,jdbcType=INTEGER}
+        </if>
+        <if test="gatewayFactory != null">
+            and GATEWAY_FACTORY =
+            #{gatewayFactory,jdbcType=CHAR}
+        </if>
+
+        <if test="gatewayAdslAccount != null">
+            and GATEWAY_ADSL_ACCOUNT like
+            CONCAT('%',
+            '${gatewayAdslAccount}','%' )
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and GATEWAY_SERIALNUMBER like
+            CONCAT('%',
+            '${gatewaySerialnumber}','%' )
+        </if>
+        <if test="gatewayMacaddress != null">
+            and GATEWAY_MACADDRESS =
+            #{gatewayMacaddress,jdbcType=CHAR}
+        </if>
+        <if test="gatewayUuid != null ">
+            and GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayDeviceUuid != null ">
+            and GATEWAY_DEVICE_UUID = #{gatewayDeviceUuid,jdbcType=VARCHAR}
+        </if>
+
+
+    </select>
+
+    <select id="queryGatewayInfoList" parameterType="com.cmiot.rms.dao.model.GatewayInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />, f.factory_name as GATEWAY_FACTORY
+        from t_gateway_info a,  t_factory_info f
+        WHERE
+        a.gateway_factory_code = f.factory_code
+        <if test="gatewayFactoryCode != null and gatewayFactoryCode !=0">
+            and GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayAreaId != null and gatewayAreaId !=0">
+            and GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <select id="selectGatewayInfo" parameterType="com.cmiot.rms.dao.model.GatewayInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />, f.factory_name as GATEWAY_FACTORY
+        from t_gateway_info a,  t_factory_info f
+        WHERE
+        a.gateway_factory_code = f.factory_code
+        <if test="gatewayUuid != null ">
+            and GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and GATEWAY_SERIALNUMBER = #{gatewaySerialnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayFactoryCode != null">
+            AND GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayMacaddress != null">
+            and GATEWAY_MACADDRESS = #{gatewayMacaddress,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayPassword != null">
+            and GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayAdslAccount != null">
+            and GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectGatewayCount" parameterType="com.cmiot.rms.dao.model.GatewayInfo" resultType="java.lang.Integer">
+        select COUNT(*)
+        from t_gateway_info
+        WHERE 1=1
+        <if test="gatewaySerialnumber != null">
+            and GATEWAY_SERIALNUMBER = #{gatewaySerialnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayMacaddress != null">
+            and GATEWAY_MACADDRESS = #{gatewayMacaddress,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayPassword != null">
+            and GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR}
+        </if>
+        <if test="gatewayAdslAccount != null">
+            and GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="queryListByIds"  resultMap="BaseResultMap">
+        select
+        a.GATEWAY_UUID, a.GATEWAY_TYPE, a.GATEWAY_MODEL, a.GATEWAY_NAME, a.GATEWAY_VERSION,
+        a.GATEWAY_SERIALNUMBER, f.factory_name as GATEWAY_FACTORY, a.GATEWAY_FACTORY_CODE, a.GATEWAY_MEMO,
+        a.GATEWAY_HARDWARE_VERSION, a.GATEWAY_JOIN_TIME, a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT, a.GATEWAY_STATUS, a.GATEWAY_IPADDRESS,
+        a.GATEWAY_MACADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,
+        a.GATEWAY_AREA_ID, a.GATEWAY_PASSWORD, a.GATEWAY_DEVICE_UUID, a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,
+        a.gateway_connectionrequest_username, a.gateway_connectionrequest_password
+        from t_gateway_info a ,t_factory_info f
+        WHERE
+        a.gateway_factory_code = f.factory_code
+        and a.GATEWAY_UUID IN
+        <foreach  collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_gateway_info
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from t_gateway_info
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        insert into t_gateway_info (GATEWAY_UUID, GATEWAY_TYPE, GATEWAY_MODEL,
+        GATEWAY_NAME, GATEWAY_VERSION, GATEWAY_SERIALNUMBER,
+        GATEWAY_FACTORY, GATEWAY_FACTORY_CODE, GATEWAY_MEMO,
+        GATEWAY_HARDWARE_VERSION, GATEWAY_JOIN_TIME,
+        GATEWAY_LAST_CONN_TIME, GATEWAY_ADSL_ACCOUNT,
+        GATEWAY_STATUS,
+        GATEWAY_IPADDRESS,
+        GATEWAY_MACADDRESS,
+        GATEWAY_CONNECTIONREQUESTURL,
+        GATEWAY_AREA_ID, GATEWAY_DEVICE_UUID, GATEWAY_PASSWORD,GATEWAY_DIGEST_ACCOUNT,GATEWAY_DIGEST_PASSWORD)
+        values (#{gatewayUuid,jdbcType=VARCHAR}, #{gatewayType,jdbcType=CHAR}, #{gatewayModel,jdbcType=CHAR},
+        #{gatewayName,jdbcType=CHAR}, #{gatewayVersion,jdbcType=VARCHAR}, #{gatewaySerialnumber,jdbcType=VARCHAR},
+        #{gatewayFactory,jdbcType=CHAR}, #{gatewayFactoryCode,jdbcType=CHAR}, #{gatewayMemo,jdbcType=VARCHAR},
+        #{gatewayHardwareVersion,jdbcType=VARCHAR}, #{gatewayJoinTime,jdbcType=INTEGER},
+        #{gatewayLastConnTime,jdbcType=INTEGER}, #{gatewayAdslAccount,jdbcType=VARCHAR},
+        #{gatewayStatus,jdbcType=VARCHAR},
+        #{gatewayIpaddress,jdbcType=VARCHAR},
+        #{gatewayMacaddress,jdbcType=VARCHAR},
+        #{gatewayConnectionrequesturl,jdbcType=VARCHAR},
+        #{gatewayAreaId,jdbcType=VARCHAR}, #{gatewayDeviceUuid,jdbcType=VARCHAR},#{gatewayPassword,jdbcType=VARCHAR},
+        #{gatewayDigestAccount,jdbcType=VARCHAR},#{gatewayDigestPassword,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        insert into t_gateway_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gatewayUuid != null">
+                GATEWAY_UUID,
+            </if>
+            <if test="gatewayType != null">
+                GATEWAY_TYPE,
+            </if>
+            <if test="gatewayModel != null">
+                GATEWAY_MODEL,
+            </if>
+            <if test="gatewayName != null">
+                GATEWAY_NAME,
+            </if>
+            <if test="gatewayVersion != null">
+                GATEWAY_VERSION,
+            </if>
+            <if test="gatewaySerialnumber != null">
+                GATEWAY_SERIALNUMBER,
+            </if>
+            <if test="gatewayFactory != null">
+                GATEWAY_FACTORY,
+            </if>
+            <if test="gatewayFactoryCode != null">
+                GATEWAY_FACTORY_CODE,
+            </if>
+            <if test="gatewayMemo != null">
+                GATEWAY_MEMO,
+            </if>
+            <if test="gatewayHardwareVersion != null">
+                GATEWAY_HARDWARE_VERSION,
+            </if>
+            <if test="gatewayJoinTime != null">
+                GATEWAY_JOIN_TIME,
+            </if>
+            <if test="gatewayLastConnTime != null">
+                GATEWAY_LAST_CONN_TIME,
+            </if>
+            <if test="gatewayAdslAccount != null">
+                GATEWAY_ADSL_ACCOUNT,
+            </if>
+            <if test="gatewayStatus != null">
+                GATEWAY_STATUS,
+            </if>
+            <if test="gatewayIpaddress != null">
+                GATEWAY_IPADDRESS,
+            </if>
+            <if test="gatewayMacaddress != null">
+                GATEWAY_MACADDRESS,
+            </if>
+            <if test="gatewayConnectionrequesturl != null">
+                GATEWAY_CONNECTIONREQUESTURL,
+            </if>
+            <if test="gatewayAreaId != null">
+                GATEWAY_AREA_ID,
+            </if>
+            <if test="gatewayDeviceUuid != null">
+                GATEWAY_DEVICE_UUID,
+            </if>
+            <if test="gatewayFirmwareUuid != null">
+                GATEWAY_FIRMWARE_UUID,
+            </if>
+            <if test="gatewayPassword != null">
+                GATEWAY_PASSWORD,
+            </if>
+            <if test="osgi != null">
+                osgi,
+            </if>
+            <if test="jvm != null">
+                jvm,
+            </if>
+            <if test="gatewayDigestAccount != null">
+                GATEWAY_DIGEST_ACCOUNT,
+            </if>
+            <if test="gatewayDigestPassword != null">
+                GATEWAY_DIGEST_PASSWORD,
+            </if>
+            <if test="newFactoryCode != null">
+                new_factory_code,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gatewayUuid != null">
+                #{gatewayUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayType != null">
+                #{gatewayType,jdbcType=CHAR},
+            </if>
+            <if test="gatewayModel != null">
+                #{gatewayModel,jdbcType=CHAR},
+            </if>
+            <if test="gatewayName != null">
+                #{gatewayName,jdbcType=CHAR},
+            </if>
+            <if test="gatewayVersion != null">
+                #{gatewayVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewaySerialnumber != null">
+                #{gatewaySerialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFactory != null">
+                #{gatewayFactory,jdbcType=CHAR},
+            </if>
+            <if test="gatewayFactoryCode != null">
+                #{gatewayFactoryCode,jdbcType=CHAR},
+            </if>
+            <if test="gatewayMemo != null">
+                #{gatewayMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayHardwareVersion != null">
+                #{gatewayHardwareVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayJoinTime != null">
+                #{gatewayJoinTime,jdbcType=INTEGER},
+            </if>
+            <if test="gatewayLastConnTime != null">
+                #{gatewayLastConnTime,jdbcType=INTEGER},
+            </if>
+            <if test="gatewayAdslAccount != null">
+                #{gatewayAdslAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayStatus != null">
+                #{gatewayStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayAddressingtype != null">
+                #{gatewayAddressingtype,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayIpaddress != null">
+                #{gatewayIpaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewaySubnetmask != null">
+                #{gatewaySubnetmask,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDefaultgateway != null">
+                #{gatewayDefaultgateway,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDnsservers != null">
+                #{gatewayDnsservers,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayMacaddress != null">
+                #{gatewayMacaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDhcpoptionnumberofentries != null">
+                #{gatewayDhcpoptionnumberofentries,jdbcType=INTEGER},
+            </if>
+            <if test="gatewayUrl != null">
+                #{gatewayUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayConnectionrequesturl != null">
+                #{gatewayConnectionrequesturl,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayAreaId != null">
+                #{gatewayAreaId,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDeviceUuid != null">
+                #{gatewayDeviceUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFirmwareUuid != null">
+                #{gatewayFirmwareUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayPassword != null">
+                #{gatewayPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="osgi != null">
+                #{osgi,jdbcType=VARCHAR},
+            </if>
+            <if test="jvm != null">
+                #{jvm,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDigestAccount != null">
+                #{gatewayDigestAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDigestPassword != null">
+                #{gatewayDigestPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="newFactoryCode != null">
+                #{newFactoryCode,jdbcType=VARCHAR},
+            </if>
+
+        </trim>
+    </insert>
+    <insert id="batchInsertGatewayInfo" parameterType="java.util.List">
+
+
+        insert into t_gateway_info (GATEWAY_UUID, GATEWAY_TYPE, GATEWAY_MODEL,
+        GATEWAY_NAME, GATEWAY_VERSION, GATEWAY_SERIALNUMBER,
+        GATEWAY_FACTORY, GATEWAY_FACTORY_CODE, GATEWAY_MEMO,
+        GATEWAY_HARDWARE_VERSION, GATEWAY_JOIN_TIME,
+        GATEWAY_LAST_CONN_TIME, GATEWAY_ADSL_ACCOUNT,
+        GATEWAY_STATUS,
+        GATEWAY_IPADDRESS,
+        GATEWAY_MACADDRESS,
+        GATEWAY_CONNECTIONREQUESTURL,
+        GATEWAY_AREA_ID, GATEWAY_DEVICE_UUID,
+        GATEWAY_PASSWORD,GATEWAY_DIGEST_ACCOUNT,
+        GATEWAY_DIGEST_PASSWORD,GATEWAY_FIRMWARE_UUID,
+        OSGI, JVM
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.gatewayUuid,jdbcType=VARCHAR}, #{item.gatewayType,jdbcType=CHAR}, #{item.gatewayModel,jdbcType=CHAR},
+            #{item.gatewayName,jdbcType=CHAR}, #{item.gatewayVersion,jdbcType=VARCHAR}, #{item.gatewaySerialnumber,jdbcType=VARCHAR},
+            #{item.gatewayFactory,jdbcType=CHAR}, #{item.gatewayFactoryCode,jdbcType=CHAR}, #{item.gatewayMemo,jdbcType=VARCHAR},
+            #{item.gatewayHardwareVersion,jdbcType=VARCHAR}, #{item.gatewayJoinTime,jdbcType=INTEGER},
+            #{item.gatewayLastConnTime,jdbcType=INTEGER}, #{item.gatewayAdslAccount,jdbcType=VARCHAR},
+            #{item.gatewayStatus,jdbcType=VARCHAR}, #{item.gatewayAddressingtype,jdbcType=VARCHAR},
+            #{item.gatewayIpaddress,jdbcType=VARCHAR},
+            #{item.gatewayMacaddress,jdbcType=VARCHAR},
+            #{item.gatewayConnectionrequesturl,jdbcType=VARCHAR},
+            #{item.gatewayAreaId,jdbcType=VARCHAR}, #{item.gatewayDeviceUuid,jdbcType=VARCHAR},#{item.gatewayPassword,jdbcType=VARCHAR},
+            #{item.gatewayDigestAccount,jdbcType=VARCHAR},#{item.gatewayDigestPassword,jdbcType=VARCHAR},#{item.gatewayFirmwareUuid,jdbcType=VARCHAR},
+            #{item.osgi,jdbcType=VARCHAR},#{item.jvm,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update t_gateway_info
+        <set>
+            <if test="gatewayType != null">
+                GATEWAY_TYPE = #{gatewayType,jdbcType=CHAR},
+            </if>
+            <if test="gatewayModel != null">
+                GATEWAY_MODEL = #{gatewayModel,jdbcType=CHAR},
+            </if>
+            <if test="gatewayName != null">
+                GATEWAY_NAME = #{gatewayName,jdbcType=CHAR},
+            </if>
+            <if test="gatewayVersion != null">
+                GATEWAY_VERSION = #{gatewayVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewaySerialnumber != null">
+                GATEWAY_SERIALNUMBER = #{gatewaySerialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFactory != null">
+                GATEWAY_FACTORY = #{gatewayFactory,jdbcType=CHAR},
+            </if>
+            <if test="gatewayFactoryCode != null">
+                GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=CHAR},
+            </if>
+            <if test="gatewayMemo != null">
+                GATEWAY_MEMO = #{gatewayMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayHardwareVersion != null">
+                GATEWAY_HARDWARE_VERSION = #{gatewayHardwareVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayJoinTime != null">
+                GATEWAY_JOIN_TIME = #{gatewayJoinTime,jdbcType=INTEGER},
+            </if>
+            <if test="gatewayLastConnTime != null">
+                GATEWAY_LAST_CONN_TIME = #{gatewayLastConnTime,jdbcType=INTEGER},
+            </if>
+            <if test="gatewayAdslAccount != null">
+                GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayStatus != null">
+                GATEWAY_STATUS = #{gatewayStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayIpaddress != null">
+                GATEWAY_IPADDRESS = #{gatewayIpaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayMacaddress != null">
+                GATEWAY_MACADDRESS = #{gatewayMacaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayConnectionrequesturl != null">
+                GATEWAY_CONNECTIONREQUESTURL = #{gatewayConnectionrequesturl,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayAreaId != null">
+                GATEWAY_AREA_ID = #{gatewayAreaId,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDeviceUuid != null">
+                GATEWAY_DEVICE_UUID = #{gatewayDeviceUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFirmwareUuid != null">
+                GATEWAY_FIRMWARE_UUID = #{gatewayFirmwareUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayExternalIPaddress != null">
+                GATEWAY_EXTERNALIPADDRESS = #{gatewayExternalIPaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayPassword != null">
+                GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFamilyAccount != null">
+                GATEWAY_FAMILY_ACCOUNT = #{gatewayFamilyAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayFamilyPassword != null">
+                GATEWAY_FAMILY_PASSWORD = #{gatewayFamilyPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDigestAccount != null">
+                GATEWAY_DIGEST_ACCOUNT = #{gatewayDigestAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayDigestPassword != null">
+                GATEWAY_DIGEST_PASSWORD = #{gatewayDigestPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayConnectionrequestUsername != null">
+                gateway_connectionrequest_username = #{gatewayConnectionrequestUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayConnectionrequestPassword != null">
+                gateway_connectionrequest_password = #{gatewayConnectionrequestPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="flowRate != null">
+                flowrate = #{flowRate,jdbcType=VARCHAR},
+            </if>
+            <if test="businessStatus != null">
+                business_status = #{businessStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateGatewayAreaIdByPassword" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update
+        t_gateway_info
+        set
+        GATEWAY_AREA_ID = #{gatewayAreaId,jdbcType=VARCHAR}
+        where
+        GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update t_gateway_info
+        set GATEWAY_TYPE = #{gatewayType,jdbcType=CHAR},
+        GATEWAY_MODEL = #{gatewayModel,jdbcType=CHAR},
+        GATEWAY_NAME = #{gatewayName,jdbcType=CHAR},
+        GATEWAY_VERSION = #{gatewayVersion,jdbcType=VARCHAR},
+        GATEWAY_SERIALNUMBER = #{gatewaySerialnumber,jdbcType=VARCHAR},
+        GATEWAY_FACTORY = #{gatewayFactory,jdbcType=CHAR},
+        GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=CHAR},
+        GATEWAY_MEMO = #{gatewayMemo,jdbcType=VARCHAR},
+        GATEWAY_HARDWARE_VERSION = #{gatewayHardwareVersion,jdbcType=VARCHAR},
+        GATEWAY_JOIN_TIME = #{gatewayJoinTime,jdbcType=INTEGER},
+        GATEWAY_LAST_CONN_TIME = #{gatewayLastConnTime,jdbcType=INTEGER},
+        GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR},
+        GATEWAY_STATUS = #{gatewayStatus,jdbcType=VARCHAR},
+        GATEWAY_IPADDRESS = #{gatewayIpaddress,jdbcType=VARCHAR},
+        GATEWAY_MACADDRESS = #{gatewayMacaddress,jdbcType=VARCHAR},
+        GATEWAY_CONNECTIONREQUESTURL = #{gatewayConnectionrequesturl,jdbcType=VARCHAR},
+        GATEWAY_AREA_ID = #{gatewayAreaId,jdbcType=VARCHAR},
+        GATEWAY_DEVICE_UUID = #{gatewayDeviceUuid,jdbcType=VARCHAR},
+        GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR}
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询网关设备厂商 -->
+    <select id="getDeviceFactory" resultMap="BaseResultMap">
+        select distinct GATEWAY_FACTORY,GATEWAY_FACTORY_CODE from t_gateway_info
+        where GATEWAY_FACTORY is not null and GATEWAY_FACTORY_CODE is not null
+        and GATEWAY_FACTORY&lt;&gt;'' and  GATEWAY_FACTORY_CODE&lt;&gt;''
+    </select>
+    <select id="queryGatewayAlarmInfo" resultType="java.util.HashMap">
+        select alarm_code, alarm_name, alarm_type, alarm_level, alarm_trigger, alarm_other from t_alarm_code where alarm_code in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateGatewayFirmwareInfo" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update t_gateway_info
+        <set>
+            <if test="gatewayFirmwareUuid != null">
+                GATEWAY_FIRMWARE_UUID = #{gatewayFirmwareUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="gatewayVersion != null">
+                GATEWAY_VERSION = #{gatewayVersion,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateBackupFileMaxNumber" parameterType="java.util.HashMap">
+        update t_gateway_info
+        set backup_file_max_number = #{backupFileMaxNumber,jdbcType=INTEGER}
+        where GATEWAY_UUID IN
+        <foreach  collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <update id="updateLogSwitchStatus" parameterType="java.util.HashMap">
+        update t_gateway_info
+        set log_switch_status = #{logSwitchStatus,jdbcType=INTEGER}
+        where GATEWAY_UUID =  #{gatewayId,jdbcType=VARCHAR}
+    </update>
+
+
+
+    <select id="queryDigestPassword" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select GATEWAY_DIGEST_PASSWORD as password
+        from t_gateway_info
+        WHERE GATEWAY_DIGEST_ACCOUNT = #{gatewayDigestAccount,jdbcType=VARCHAR}
+    </select>
+    <select id="queryGatewayListByAreas" resultType="java.util.HashMap">
+        select gateway_uuid gatewayUuid, gateway_macaddress gatewayMac, gateway_connectionrequesturl url, GATEWAY_FIRMWARE_UUID firmwareUuid
+        from t_gateway_info
+        WHERE
+        gateway_area_id IN
+        <foreach collection="areaIds" index="index" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="queryGatewayFirmVersionAndFlowrateByAreaIds" resultType="java.util.HashMap">
+        select g.gateway_uuid gatewayUuid, g.gateway_macaddress mac ,  CASE WHEN g.flowrate  IS NULL THEN 0 ELSE g.flowrate  END flowrate, f.firmware_version firmwareVersion
+        from t_gateway_info g, t_firmware_info f
+        WHERE
+        g.gateway_firmware_uuid = f.id
+        and g.gateway_area_id IN
+        <foreach collection="areaIds" index="index" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="updateGatewayByMac" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update
+        t_gateway_info
+        set
+        GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR}
+        where
+        GATEWAY_MACADDRESS = #{gatewayMacaddress,jdbcType=VARCHAR}
+    </update>
+    <update id="updateGatewayBusinessStatusByAdsl" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update
+        t_gateway_info
+        set
+        BUSINESS_STATUS = #{businessStatus,jdbcType=VARCHAR}
+        where
+        GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryGatewayListById" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_gateway_info a
+        WHERE
+        a.gateway_uuid in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.gatewayUuid,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <insert id="batchInsertGatewayInfoNew" parameterType="java.util.List">
+        insert into t_gateway_info (GATEWAY_UUID, GATEWAY_TYPE, GATEWAY_MODEL,
+        GATEWAY_NAME, GATEWAY_VERSION, GATEWAY_SERIALNUMBER,
+        GATEWAY_FACTORY, GATEWAY_FACTORY_CODE, GATEWAY_MEMO,
+        GATEWAY_HARDWARE_VERSION, GATEWAY_JOIN_TIME,
+        GATEWAY_LAST_CONN_TIME, GATEWAY_ADSL_ACCOUNT,
+        GATEWAY_STATUS,
+        GATEWAY_IPADDRESS,
+        GATEWAY_MACADDRESS,
+        GATEWAY_CONNECTIONREQUESTURL,
+        GATEWAY_AREA_ID, GATEWAY_DEVICE_UUID,
+        GATEWAY_PASSWORD,GATEWAY_DIGEST_ACCOUNT,
+        GATEWAY_DIGEST_PASSWORD,GATEWAY_FIRMWARE_UUID,
+        OSGI, JVM,ssidInitLastnumber,ssidInitPwd,gateway_connectionrequest_password,new_factory_code,useradminInitPwd
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.gatewayUuid,jdbcType=VARCHAR}, #{item.gatewayType,jdbcType=CHAR}, #{item.gatewayModel,jdbcType=CHAR},
+            #{item.gatewayName,jdbcType=CHAR}, #{item.gatewayVersion,jdbcType=VARCHAR}, #{item.gatewaySerialnumber,jdbcType=VARCHAR},
+            #{item.gatewayFactory,jdbcType=CHAR}, #{item.gatewayFactoryCode,jdbcType=CHAR}, #{item.gatewayMemo,jdbcType=VARCHAR},
+            #{item.gatewayHardwareVersion,jdbcType=VARCHAR}, #{item.gatewayJoinTime,jdbcType=INTEGER},
+            #{item.gatewayLastConnTime,jdbcType=INTEGER}, #{item.gatewayAdslAccount,jdbcType=VARCHAR},
+            #{item.gatewayStatus,jdbcType=VARCHAR},
+            #{item.gatewayIpaddress,jdbcType=VARCHAR},
+            #{item.gatewayMacaddress,jdbcType=VARCHAR},
+            #{item.gatewayConnectionrequesturl,jdbcType=VARCHAR},
+            #{item.gatewayAreaId,jdbcType=VARCHAR}, #{item.gatewayDeviceUuid,jdbcType=VARCHAR},#{item.gatewayPassword,jdbcType=VARCHAR},
+            #{item.gatewayDigestAccount,jdbcType=VARCHAR},#{item.gatewayDigestPassword,jdbcType=VARCHAR},#{item.gatewayFirmwareUuid,jdbcType=VARCHAR},
+            #{item.osgi,jdbcType=VARCHAR},#{item.jvm,jdbcType=VARCHAR},#{item.ssidInitLastnumber,jdbcType=VARCHAR},#{item.ssidInitPwd,jdbcType=VARCHAR}
+            ,#{item.gatewayConnectionrequestPassword,jdbcType=VARCHAR},#{item.newFactoryCode,jdbcType=VARCHAR},#{item.uadminInitPwd,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+
+    <update id="unBindPasswordAndAdslAccount" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update t_gateway_info      SET GATEWAY_ADSL_ACCOUNT = '' ,
+        GATEWAY_PASSWORD = NULL ,gateway_status='',gateway_connectionrequesturl='',gateway_connectionrequest_username='',gateway_connectionrequest_password='',gateway_digest_account='',
+        gateway_digest_password='',gateway_family_account='',gateway_family_password=''  where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </update>
+    <select id="queryGateWayInfoListPage" parameterType="com.cmiot.rms.dao.model.GatewayInfo"
+            resultMap="BaseResultMap">
+        select
+        a.GATEWAY_MACADDRESS,
+        a.gateway_factory AS GATEWAY_FACTORY,
+        a.gateway_model AS DEVICE_MODEL,
+        a.GATEWAY_UUID,a.GATEWAY_TYPE,a.GATEWAY_MODEL,a.GATEWAY_NAME,
+        a.GATEWAY_VERSION,a.GATEWAY_SERIALNUMBER,a.GATEWAY_FACTORY_CODE,
+        a.GATEWAY_MEMO,a.GATEWAY_HARDWARE_VERSION,a.GATEWAY_JOIN_TIME,a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT,a.GATEWAY_STATUS,a.GATEWAY_IPADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,a.GATEWAY_AREA_ID,
+        a.GATEWAY_DEVICE_UUID,a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_EXTERNALIPADDRESS,
+        a.GATEWAY_PASSWORD,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,
+        a.GATEWAY_FAMILY_ACCOUNT,a.GATEWAY_FAMILY_PASSWORD, a.log_switch_status
+        FROM
+        t_gateway_info a
+        WHERE
+        1 = 1
+
+        <if test='gatewayFactoryCode != null and gatewayFactoryCode != "0"'>
+            and a.GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test='gatewayAreaId != null and gatewayAreaId != "0"'>
+            and (a.GATEWAY_AREA_ID in ${gatewayAreaId}  OR a.GATEWAY_AREA_ID = '' OR a.GATEWAY_AREA_ID IS NULL)
+
+        </if>
+        <if test="gatewayFactory != null">
+            and a.GATEWAY_FACTORY =
+            #{gatewayFactory,jdbcType=CHAR}
+        </if>
+        <!-- 宽带账号 -->
+        <if test="gatewayAdslAccount != null">
+            and a.GATEWAY_ADSL_ACCOUNT like
+            CONCAT('%',
+            #{gatewayAdslAccount},'%' )
+        </if>
+        <if test="gatewaySerialnumber != null">
+            and a.GATEWAY_SERIALNUMBER like
+            CONCAT('%',
+            #{gatewaySerialnumber},'%' )
+        </if>
+        <if test="gatewayMacaddress != null">
+            and a.GATEWAY_MACADDRESS like
+            CONCAT('%',
+            #{gatewayMacaddress},'%' )
+        </if>
+        <!-- 设备型号 -->
+        <if test="gatewayModel!=null">
+            and a.GATEWAY_MODEL =
+            #{gatewayModel,jdbcType=CHAR}
+        </if>
+        <!-- 固件版本 -->
+        <if test="gatewayVersion!=null">
+            and a.GATEWAY_VERSION =
+            #{gatewayVersion,jdbcType=CHAR}
+        </if>
+        <if test="businessCode!=null">
+            and a.gateway_uuid in (select gateway_uuid from t_gateway_business_open_detail where business_code_boss = #{businessCode,jdbcType=CHAR})
+        </if>
+
+    </select>
+
+    <select id="countSelectGatewayInfoByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from t_gateway_info a where a.GATEWAY_FACTORY_CODE = #{gatewayFactoryCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectGatewayInfoListByWorkOrder" parameterType="com.cmiot.rms.dao.model.GatewayBusiness" resultMap="BaseResultMap">
+
+        SELECT
+        a.GATEWAY_UUID,a.GATEWAY_TYPE,a.GATEWAY_MODEL,a.GATEWAY_NAME,a.GATEWAY_VERSION,
+        a.GATEWAY_SERIALNUMBER,a.GATEWAY_FACTORY_CODE,a.GATEWAY_MEMO,
+        a.GATEWAY_HARDWARE_VERSION,a.GATEWAY_JOIN_TIME,a.GATEWAY_LAST_CONN_TIME,
+        a.GATEWAY_ADSL_ACCOUNT,a.GATEWAY_STATUS,a.GATEWAY_IPADDRESS,
+        a.GATEWAY_MACADDRESS,
+        a.GATEWAY_CONNECTIONREQUESTURL,
+        a.GATEWAY_AREA_ID,a.GATEWAY_DEVICE_UUID,a.GATEWAY_FIRMWARE_UUID,a.GATEWAY_EXTERNALIPADDRESS,
+        a.GATEWAY_PASSWORD,a.GATEWAY_DIGEST_ACCOUNT,a.GATEWAY_DIGEST_PASSWORD,a.GATEWAY_FAMILY_ACCOUNT,
+        a.GATEWAY_FAMILY_PASSWORD,a.OSGI,a.JVM,a.backup_file_max_number,a.gateway_connectionrequest_username,
+        a.gateway_connectionrequest_password,a.log_switch_status,a.flowrate,a.business_status,a.ssidInitLastnumber,a.ssidInitPwd
+        FROM t_gateway_business b,t_gateway_info a
+        WHERE (b.gateway_password = a.gateway_password or b.adsl_account = a.gateway_adsl_account)
+        AND a.gateway_status = "已绑定"
+        AND b.business_statu = '2'
+        <if test="failCount != null and failCount != 0" >
+            <![CDATA[  AND b.fail_count < #{failCount,jdbcType=INTEGER}]]>
+        </if>
+        GROUP BY a.GATEWAY_UUID
+    </select>
+
+    <update id="clearPasswordAndAdslAccount" parameterType="com.cmiot.rms.dao.model.GatewayInfo">
+        update t_gateway_info
+        set  GATEWAY_ADSL_ACCOUNT = #{gatewayAdslAccount,jdbcType=VARCHAR},
+        GATEWAY_PASSWORD = #{gatewayPassword,jdbcType=VARCHAR}
+        where GATEWAY_UUID = #{gatewayUuid,jdbcType=VARCHAR}
+    </update>
+    <select id="queryManufacturerCodeByFactoryCode" parameterType="java.lang.String" resultType="java.util.HashMap">
+	       SELECT m.code manufacturerCode FROM t_factory_info f, t_manufacturer_info m WHERE f.manufacturer_id = m.id  AND f.factory_code =  #{gatewayFactoryCode,jdbcType=VARCHAR}
+	    </select>
+    <update id="updateGatewayFactoryCode" parameterType="java.util.HashMap">
+        update t_gateway_info
+        set  GATEWAY_FACTORY_CODE = #{newCode,jdbcType=VARCHAR}
+        where GATEWAY_FACTORY_CODE = #{oldCode,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByPppoeAccounts" resultMap="BaseResultMap" parameterType="java.util.List">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_gateway_info
+        WHERE GATEWAY_ADSL_ACCOUNT IN
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+	<select id="queryGatewayCountByAreaId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from t_gateway_info a where a.GATEWAY_AREA_ID = #{areaId,jdbcType=VARCHAR}
+    </select>
+    <select id="queryGatewayCountByAreaList" parameterType="java.util.List" resultType="java.lang.Integer">
+        select count(1) from t_gateway_info a where a.GATEWAY_AREA_ID IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+        	#{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="selectByMac" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT GATEWAY_UUID as gatewayId, GATEWAY_MACADDRESS as mac, GATEWAY_SERIALNUMBER as sn,
+        (SELECT manufacturer_name FROM t_manufacturer_info m WHERE m.id = a.new_factory_code ) as factory,
+        gateway_model as deviceModel, GATEWAY_ADSL_ACCOUNT adslAccount, GATEWAY_AREA_ID areaId
+        FROM t_gateway_info a
+        WHERE GATEWAY_MACADDRESS IN
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+	<select id="selectDeviceOrOuiOrFirmwareInfo" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		a.id deviceId,
+		a.device_type deviceType,
+		a.device_model deviceModel,
+		a.device_name deviceName,
+		a.device_factory deviceFactory,
+		a.device_memo deviceMemo,
+		b.id ouiId,
+		b.factory_code ouiCode,
+		b.manufacturer_id manufacturerId,
+		c.id firmwareId,
+		c.firmware_name firmwareName,
+		c.firmware_version firmwareVersion,
+		c.firmware_path firmwarePath,
+		c.firmware_size firmwareSize,
+		c.firmware_create_time firmwareCreate_time,
+		c.firmware_description firmwareDescription,
+		c.check_status checkStatus,
+		c.upload_md5 uploadMd5,
+		c.input_md5 inputMd5,
+		c.area_id areaId
+		from
+		t_device_info a ,
+		t_factory_info b ,
+		t_firmware_info c
+		where
+		1=1
+		<!--  inform 上报OUI -->
+		and b.factory_code = #{factoryCode,jdbcType=VARCHAR}
+		and b.manufacturer_id = a.device_factory
+		<!--  inform 上报设备型号 -->
+		and a.device_model = #{deviceModel,jdbcType=VARCHAR}
+		and c.device_id = a.id
+		and c.device_model = a.device_model
+		<!--  inform 上报固件版本 -->
+		and c.firmware_version = #{firmwareVersion,jdbcType=VARCHAR}
+	</select>
+</mapper>

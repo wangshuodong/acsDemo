@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.DeviceInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.DeviceInfo" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="CHAR" />
+        <result column="device_model" property="deviceModel" jdbcType="CHAR" />
+        <result column="device_name" property="deviceName" jdbcType="CHAR" />
+        <result column="device_factory" property="deviceFactory" jdbcType="CHAR" />
+        <result column="device_memo" property="deviceMemo" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.cmiot.rms.dao.model.derivedclass.DeviceBean" extends="BaseResultMap" >
+        <result column="factory_name" property="deviceFactoryName" jdbcType="CHAR" />
+        <result column="manufacturer_name" property="deviceManufacturerName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, device_type, device_model, device_name, device_factory, device_memo
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="queryList4Page" parameterType="com.cmiot.rms.dao.model.DeviceInfo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where 1=1
+        <if test="deviceFactory != null and deviceFactory != '' ">
+            and device_factory =
+            #{deviceFactory,jdbcType=CHAR}
+        </if>
+        <if test="deviceModel != null and deviceModel != ''">
+            and device_model like
+            CONCAT('%', '${deviceModel}','%' )
+        </if>
+    </select>
+
+    <!-- 查询设备类型 -->
+    <select id="queryDeviceInfoList4Page" parameterType="com.cmiot.rms.dao.model.DeviceInfo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info a
+        where 1=1
+        <if test="deviceFactory != null and deviceFactory != '' ">
+            and a.device_factory =
+            #{deviceFactory,jdbcType=CHAR}
+        </if>
+        <if test="deviceModel != null and deviceModel != ''">
+            and a.device_model like
+            CONCAT('%', '${deviceModel}','%' )
+        </if>
+    </select>
+
+    <select id="searchList"   resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where 1=1
+
+    </select>
+
+
+    <select id="queryList" parameterType="com.cmiot.rms.dao.model.DeviceInfo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where 1=1
+        <if test="deviceFactory != null and deviceFactory !=''">
+            and device_factory =
+            #{deviceFactory,jdbcType=CHAR}
+        </if>
+
+        <if test="deviceModel != null">
+            and device_model like
+            CONCAT('%', #{deviceModel},'%' )
+        </if>
+        <if test="id != null and id !='' ">
+            and id =
+            #{id,jdbcType=CHAR}
+        </if>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_device_info
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.cmiot.rms.dao.model.DeviceInfo" >
+        insert into t_device_info (id, device_type, device_model,
+        device_name, device_factory,
+        device_memo)
+        values (#{id,jdbcType=VARCHAR}, #{deviceType,jdbcType=CHAR}, #{deviceModel,jdbcType=CHAR},
+        #{deviceName,jdbcType=CHAR}, #{deviceVersion,jdbcType=VARCHAR}, #{deviceFactory,jdbcType=CHAR},
+        #{deviceMemo,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.DeviceInfo" >
+        insert into t_device_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="deviceType != null" >
+                device_type,
+            </if>
+            <if test="deviceModel != null" >
+                device_model,
+            </if>
+            <if test="deviceName != null" >
+                device_name,
+            </if>
+            <if test="deviceFactory != null" >
+                device_factory,
+            </if>
+            <if test="deviceMemo != null" >
+                device_memo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null" >
+                #{deviceType,jdbcType=CHAR},
+            </if>
+            <if test="deviceModel != null" >
+                #{deviceModel,jdbcType=CHAR},
+            </if>
+            <if test="deviceName != null" >
+                #{deviceName,jdbcType=CHAR},
+            </if>
+            <if test="deviceFactory != null" >
+                #{deviceFactory,jdbcType=CHAR},
+            </if>
+            <if test="deviceMemo != null" >
+                #{deviceMemo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmiot.rms.dao.model.DeviceInfo" >
+        update t_device_info
+        <set >
+            <if test="deviceType != null" >
+                device_type = #{deviceType,jdbcType=CHAR},
+            </if>
+            <if test="deviceModel != null" >
+                device_model = #{deviceModel,jdbcType=CHAR},
+            </if>
+            <if test="deviceName != null" >
+                device_name = #{deviceName,jdbcType=CHAR},
+            </if>
+            <if test="deviceFactory != null" >
+                device_factory = #{deviceFactory,jdbcType=CHAR},
+            </if>
+            <if test="deviceMemo != null" >
+                device_memo = #{deviceMemo,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.DeviceInfo" >
+        update t_device_info
+        set device_type = #{deviceType,jdbcType=CHAR},
+        device_model = #{deviceModel,jdbcType=CHAR},
+        device_name = #{deviceName,jdbcType=CHAR},
+        device_factory = #{deviceFactory,jdbcType=CHAR},
+        device_memo = #{deviceMemo,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByFactory" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where device_factory = #{deviceFactory,jdbcType=CHAR}
+    </select>
+
+    <select id="searchDeviceModel" parameterType="com.cmiot.rms.dao.model.DeviceInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_device_info
+        where device_factory = #{deviceFactory,jdbcType=VARCHAR}
+        and device_model=#{deviceModel,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="searchAllDeviceModel" resultMap="BaseResultMap">
+        select t.id id, t.device_model device_model, f.factory_code device_factory
+        from t_device_info t, t_manufacturer_info m, t_factory_info f
+        where m.id = f.manufacturer_id and m.id = t.device_factory
+    </select>
+
+
+    <select id="searchByCodeAndModel" parameterType="com.cmiot.rms.dao.model.DeviceInfo" resultMap="BaseResultMap">
+        select t.*
+        from t_device_info t, t_manufacturer_info m, t_factory_info f
+        where m.id = f.manufacturer_id and m.id = t.device_factory
+        and f.factory_code = #{deviceFactory,jdbcType=VARCHAR}
+        and t.device_model=#{deviceModel,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询设备类型 -->
+    <select id="queryDeviceInfoList" parameterType="com.cmiot.rms.dao.model.DeviceInfo"
+            resultMap="ResultMapWithBLOBs">
+       SELECT
+        a.id, a.device_type, a.device_model, a.device_name, a.device_version, a.device_factory,
+        a.device_memo,b.make_name manufacturer_name,c.manufacturer_name factory_name
+        FROM t_device_info a
+        LEFT JOIN t_make_info b ON a.device_type = b.id
+        LEFT JOIN t_manufacturer_info c ON a.device_factory = c.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="deviceFactory != null and deviceFactory != '' ">
+                AND a.device_factory = #{deviceFactory,jdbcType=CHAR}
+            </if>
+            <if test="deviceManufacturer != null and deviceManufacturer != '' ">
+                AND a.device_factory IN (SELECT id FROM t_manufacturer_info WHERE make_id = #{deviceManufacturer})
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="selectByDeviceId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select
+        a.id, a.device_type, a.device_model, a.device_name,
+         a.device_factory, a.device_memo,b.make_name manufacturer_name,c.manufacturer_name factory_name
+        from t_device_info a
+        LEFT JOIN t_make_info b ON a.device_type = b.id
+        LEFT JOIN t_manufacturer_info c ON a.device_factory = c.id
+        where a.id = #{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

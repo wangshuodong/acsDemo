@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.BoxBusinessCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.BoxBusinessCategory" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="BUSINESS_CODE" property="businessCode" jdbcType="VARCHAR" />
+    <result column="BUSINESS_NAME" property="businessName" jdbcType="VARCHAR" />
+    <result column="DEVICE_MODEL" property="deviceModel" jdbcType="VARCHAR" />
+    <result column="BUSINESS_TEMPLATE" property="businessTemplate" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="INTEGER" />
+    <result column="FACTORY_CODE" property="factoryCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultType="java.util.HashMap" parameterType="java.lang.String" >
+    select 
+   		a.id businessId,a.BUSINESS_CODE businessCode, a.BUSINESS_NAME businessName, a.DEVICE_MODEL deviceModel,a.BUSINESS_TEMPLATE businessTemplate,a.CREATE_DATE createDate,a.FACTORY_CODE,
+   		b.TEMPLATE_NAME templateName
+    from t_box_business_category_info a left join t_box_work_order_template_info b
+    on a.BUSINESS_TEMPLATE = b.ID
+    where a.id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+<select id="findBoxBusinessByTemp" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.BoxBusinessCategory" >
+    select
+    a.id businessId,a.BUSINESS_CODE businessCode, a.BUSINESS_NAME businessName, a.DEVICE_MODEL deviceModel,a.BUSINESS_TEMPLATE businessTemplate,a.CREATE_DATE createDate,a.FACTORY_CODE
+    from t_box_business_category_info a
+    where
+     a.BUSINESS_TEMPLATE = #{businessTemplate,jdbcType=VARCHAR}
+</select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_box_business_category_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.BoxBusinessCategory" >
+    insert into t_box_business_category_info (id,BUSINESS_CODE, BUSINESS_NAME, DEVICE_MODEL,BUSINESS_TEMPLATE,CREATE_DATE,FACTORY_CODE)
+    values (#{id,jdbcType=VARCHAR}, #{businessCode,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{deviceModel,jdbcType=VARCHAR}, #{businessTemplate,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER}, #{factoryCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.cmiot.rms.dao.model.BoxBusinessCategory" >
+    update t_box_business_category_info
+    <set>
+            <if test="businessName != null">
+                 BUSINESS_NAME = #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="businessCode != null">
+                BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceModel != null">
+                DEVICE_MODEL = #{deviceModel,jdbcType=VARCHAR},
+            </if>
+            <if test="businessTemplate != null">
+                BUSINESS_TEMPLATE = #{businessTemplate,jdbcType=VARCHAR},
+            </if>
+            <if test="factoryCode != null">
+                FACTORY_CODE = #{factoryCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+   
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+
+  
+  <select id="findBoxBusinessById" parameterType="java.lang.String" resultType="java.util.HashMap">
+    select
+    	a.id businessId,b.BOX_UUID gatewayId,b.BUSINESS_CODE businessCode, b.BUSINESS_STATU businessState
+    from t_box_business_category_info a, t_box_business b 
+    where  a.BUSINESS_CODE = b.BUSINESS_CODE
+
+	 and a.id = #{id,jdbcType=VARCHAR}
+
+  </select>
+
+    <select id="queryListAll" parameterType="com.cmiot.rms.dao.model.BoxBusinessCategory" resultType="java.util.HashMap">
+        select
+        a.id businessId,a.BUSINESS_CODE businessCode, a.BUSINESS_NAME businessName, a.DEVICE_MODEL deviceModel,a.BUSINESS_TEMPLATE businessTemplate,a.CREATE_DATE createDate
+        from t_box_business_category_info a
+        where 1=1
+        <if test="businessName != null" >
+            and a.BUSINESS_NAME = #{businessName,jdbcType=VARCHAR}
+        </if>
+
+        <if test="businessCode != null" >
+            and a.BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR}
+        </if>
+        <if test="deviceModel != null" >
+            and a.DEVICE_MODEL = #{deviceModel,jdbcType=VARCHAR}
+        </if>
+        <if test="businessTemplate != null" >
+            and a.BUSINESS_TEMPLATE = #{businessTemplate,jdbcType=VARCHAR}
+        </if>
+        <if test="id != null" >
+            and a.id = #{id,jdbcType=VARCHAR}
+        </if>
+        order by a.CREATE_DATE DESC
+    </select>
+
+    <select id="findAllBoxBusiness" resultMap="BaseResultMap" >
+        select
+        a.id businessId,a.BUSINESS_CODE businessCode, a.BUSINESS_NAME businessName, a.DEVICE_MODEL deviceModel,a.BUSINESS_TEMPLATE businessTemplate,a.CREATE_DATE createDate
+        from t_box_business_category_info a
+    </select>
+
+
+    <select id="queryBusinessForList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT a.ID AS businessId,a.BUSINESS_NAME AS businessName,a.BUSINESS_CODE AS businessCode,b.manufacturerID AS manufacturerID,
+        b.manufacturer_name AS manufacturerName,b.factoryID AS factoryID,b.factory_name AS factoryName,b.box_model AS 	boxModel,
+        b.hd_version AS hdVersion,b.firmware_version AS firmwareVersion,b.is_ig AS isIG,b.business_template AS businessTemplate,c.template_name AS businessTemplateName FROM
+        t_box_business_category_info a ,t_box_business_template_relation b,t_box_work_order_template_info c WHERE a.BUSINESS_CODE = b.bussiness_code and b.business_template = c.id
+        <if test="businessName != null" >
+            and a.BUSINESS_NAME  like CONCAT('%', #{businessName},'%' )
+        </if>
+        <if test="businessId != null" >
+            and a.ID = #{businessId,jdbcType=VARCHAR}
+        </if>
+        <if test="businessCode != null" >
+            and a.BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR}
+        </if>
+        <choose>
+            <when test="isIG == 0">
+                and b.is_ig = #{isIG,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                <if test="isIG != null">
+                    and b.is_ig = #{isIG,jdbcType=VARCHAR}
+                </if>
+                <if test="manufacturerID != null" >
+                    and b.manufacturerID = #{manufacturerID,jdbcType=VARCHAR}
+                </if>
+                <if test="manufacturerName != null" >
+                    and b.manufacturer_name = #{manufacturerName,jdbcType=VARCHAR}
+                </if>
+
+                <if test="factoryID != null" >
+                    and b.factoryID = #{factoryID,jdbcType=VARCHAR}
+                </if>
+                <if test="factoryName != null" >
+                    and b.factory_name = #{factoryName,jdbcType=VARCHAR}
+                </if>
+                <if test="boxModel != null" >
+                    and b.box_model = #{boxModel,jdbcType=VARCHAR}
+                </if>
+                <if test="hdVersion != null" >
+                    and b.hd_version = #{hdVersion,jdbcType=VARCHAR}
+                </if>
+                <if test="firmwareVersion != null" >
+                    and b.firmware_version = #{firmwareVersion,jdbcType=VARCHAR}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="businessTemplate != null" >
+            and b.business_template = #{businessTemplate,jdbcType=VARCHAR}
+        </if>
+
+        order by a.CREATE_DATE DESC
+    </select>
+
+
+    <!--select
+    a.id businessId,a.BUSINESS_CODE businessCode, a.BUSINESS_NAME businessName, a.DEVICE_MODEL deviceModel,a.BUSINESS_TEMPLATE businessTemplate,a.CREATE_DATE createDate,a.FACTORY_CODE,
+    b.TEMPLATE_NAME templateName, b.template_message templateMessage
+    from t_business_category_info a left join t_work_order_template_info b-->
+    <!--  
+    <select id="queryListTemplate" parameterType="java.util.Map" resultType="java.util.Map">
+          SELECT b.id businessId,b.BUSINESS_CODE businessCode,b.BUSINESS_NAME businessName,c.gateway_model deviceModel,a.id businessTemplate,a.template_message templateMessage FROM t_box_work_order_template_info a,t_box_business_category_info b ,t_box_business_template_relation c ,t_box_info d where
+        a.id = c.business_template AND c.bussiness_code = b.BUSINESS_CODE AND c.factoryID = d.box_factory_code AND c.firmware_version = d.box_version
+        AND c.hd_version = d.gateway_hardware_version AND b.BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR} AND d.box_uuid =  #{gatewayUuid,jdbcType=VARCHAR}
+    </select>
+    <select id="queryListDefaltTemplate" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT b.id businessId,b.BUSINESS_CODE businessCode,b.BUSINESS_NAME businessName,c.gateway_model deviceModel,a.id businessTemplate,a.template_message templateMessage FROM t_box_work_order_template_info a,t_box_business_category_info b ,t_box_business_template_relation c  where
+        a.id = c.business_template AND c.bussiness_code = b.BUSINESS_CODE AND c.is_ig = '0' AND b.BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR}
+    </select>-->
+</mapper>

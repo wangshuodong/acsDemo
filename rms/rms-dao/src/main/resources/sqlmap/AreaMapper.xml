@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmiot.rms.dao.mapper.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.cmiot.rms.dao.model.Area" >
+    <result column="AREA_TABLE_ID" property="areaTableId" jdbcType="INTEGER" />
+    <result column="AREA_ID" property="areaId" jdbcType="CHAR" />
+    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="AREA_TYPE" property="areaType" jdbcType="CHAR" />
+    <result column="AREA_PARENT_AREA_ID" property="areaParentAreaId" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    AREA_TABLE_ID, AREA_ID, AREA_NAME, AREA_TYPE, AREA_PARENT_AREA_ID
+  </sql>
+
+	<select id="queryList" parameterType="com.cmiot.rms.dao.model.Area"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_area
+	</select>
+
+
+	<select id="queryArea" parameterType="com.cmiot.rms.dao.model.Area"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_area
+		where 1=1
+		<if test="areaId != null">
+			and AREA_ID =
+			#{areaId,jdbcType=CHAR}
+		</if>
+	</select>
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cmiot.rms.dao.model.AreaExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_area
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.cmiot.rms.dao.model.AreaExample" >
+    delete from t_area
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cmiot.rms.dao.model.Area" >
+    insert into t_area (AREA_TABLE_ID, AREA_ID, AREA_NAME, 
+      AREA_TYPE, AREA_PARENT_AREA_ID)
+    values (#{areaTableId,jdbcType=INTEGER}, #{areaId,jdbcType=CHAR}, #{areaName,jdbcType=VARCHAR}, 
+      #{areaType,jdbcType=CHAR}, #{areaParentAreaId,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmiot.rms.dao.model.Area" >
+    insert into t_area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="areaTableId != null" >
+        AREA_TABLE_ID,
+      </if>
+      <if test="areaId != null" >
+        AREA_ID,
+      </if>
+      <if test="areaName != null" >
+        AREA_NAME,
+      </if>
+      <if test="areaType != null" >
+        AREA_TYPE,
+      </if>
+      <if test="areaParentAreaId != null" >
+        AREA_PARENT_AREA_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="areaTableId != null" >
+        #{areaTableId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=CHAR},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaType != null" >
+        #{areaType,jdbcType=CHAR},
+      </if>
+      <if test="areaParentAreaId != null" >
+        #{areaParentAreaId,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cmiot.rms.dao.model.AreaExample" resultType="java.lang.Integer" >
+    select count(*) from t_area
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_area
+    <set >
+      <if test="record.areaTableId != null" >
+        AREA_TABLE_ID = #{record.areaTableId,jdbcType=INTEGER},
+      </if>
+      <if test="record.areaId != null" >
+        AREA_ID = #{record.areaId,jdbcType=CHAR},
+      </if>
+      <if test="record.areaName != null" >
+        AREA_NAME = #{record.areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.areaType != null" >
+        AREA_TYPE = #{record.areaType,jdbcType=CHAR},
+      </if>
+      <if test="record.areaParentAreaId != null" >
+        AREA_PARENT_AREA_ID = #{record.areaParentAreaId,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_area
+    set AREA_TABLE_ID = #{record.areaTableId,jdbcType=INTEGER},
+      AREA_ID = #{record.areaId,jdbcType=CHAR},
+      AREA_NAME = #{record.areaName,jdbcType=VARCHAR},
+      AREA_TYPE = #{record.areaType,jdbcType=CHAR},
+      AREA_PARENT_AREA_ID = #{record.areaParentAreaId,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
